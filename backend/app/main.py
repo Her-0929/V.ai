@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 app = FastAPI(
     title="HER AI",
-    description="Personal AI Companion API",
+    description="Your Personal AI Companion",
     version="0.1.0"
 )
 
