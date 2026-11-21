@@ -1,0 +1,25 @@
+[
+  {
+    "entity_id": "person_vivek",
+    "entity_type": "person",
+    "display_name": "Vivek",
+    "role_in_dataset": "story_author_and_first_person_narrator",
+    "identity_source": "project owner context",
+    "notes": "Narrative statements should be attributed to Vivek's perspective."
+  },
+  {
+    "entity_id": "person_her",
+    "entity_type": "person",
+    "display_name": "HER",
+    "role_in_dataset": "person_referred_to_in_story",
+    "identity_source": "website narrative",
+    "notes": "No real name or independent identity facts inferred. Do not infer her feelings, consent, or intentions beyond reported direct statements."
+  },
+  {
+    "entity_id": "project_her_day",
+    "entity_type": "project",
+    "display_name": "HER_DAY / Heart Things",
+    "role_in_dataset": "birthday_website_and_memory_source",
+    "url": "https://vivek0929.github.io/HER_DAY/"
+  }
+]

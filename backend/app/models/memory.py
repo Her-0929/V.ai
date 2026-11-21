@@ -1,12 +1,11 @@
-
 import uuid
-
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pgvector.sqlalchemy import Vector
 
 from sqlalchemy import (
     String,
     Text,
+    Date,
     DateTime,
     ForeignKey,
     Integer,
@@ -32,6 +31,22 @@ class Memory(Base):
         CheckConstraint(
             "confidence >= 0 AND confidence <= 1",
             name="ck_memory_confidence"
+        ),
+        CheckConstraint(
+            "event_date_precision IN ('day', 'month', 'year', 'decade', 'unknown')",
+            name="ck_memory_event_date_precision"
+        ),
+        CheckConstraint(
+            "status IN ('active', 'superseded', 'disputed')",
+            name="ck_memory_status"
+        ),
+        CheckConstraint(
+            "access_scope IN ('default', 'private', 'archival')",
+            name="ck_memory_access_scope"
+        ),
+        CheckConstraint(
+            "superseded_by_id IS NULL OR superseded_by_id != id",
+            name="ck_memory_no_self_supersede"
         ),
     )
 
@@ -66,6 +81,48 @@ class Memory(Base):
     confidence: Mapped[float] = mapped_column(
         Float,
         default=1.0,
+        nullable=False
+    )
+
+    event_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+        index=True
+    )
+
+    event_date_precision: Mapped[str] = mapped_column(
+        String(20),
+        default="unknown",
+        nullable=False
+    )
+
+    source_created_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(30),
+        default="active",
+        nullable=False,
+        index=True
+    )
+
+    superseded_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("memories.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True
+    )
+
+    access_scope: Mapped[str] = mapped_column(
+        String(30),
+        default="default",
+        nullable=False
+    )
+
+    version: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
         nullable=False
     )
 
@@ -110,7 +167,14 @@ class Memory(Base):
         cascade="all, delete-orphan"
     )
 
+    superseded_by = relationship(
+        "Memory",
+        remote_side="[Memory.id]",
+        foreign_keys="[Memory.superseded_by_id]",
+        backref="superseded_memories",
+    )
+
     embedding: Mapped[list[float] | None] = mapped_column(
-         Vector(384),
+        Vector(384),
         nullable=True
     )

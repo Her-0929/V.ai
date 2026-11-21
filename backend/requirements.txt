@@ -10,3 +10,32 @@ psycopg[binary]
 alembic
 
 httpx
+
+# Vector search
+pgvector
+
+# Embeddings
+sentence-transformers
+numpy
+torch
+
+# Security & Auth
+argon2-cffi
+pyjwt
+email-validator
+python-multipart
+
+
+
+# Rate Limiting
+slowapi
+
+# Testing
+pytest
+pytest-asyncio
+
+# Ingestion & Media Processing (Milestone 12)
+pypdf
+pillow
+
+

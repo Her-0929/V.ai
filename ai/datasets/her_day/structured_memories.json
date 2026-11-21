@@ -1,0 +1,227 @@
+[
+  {
+    "memory_id": "mem_first_sighting",
+    "memory_type": "episodic",
+    "category": "first_meeting",
+    "canonical_text": "Vivek recalls first seeing her board a bus on 14 April 2017. He did not know her name at that moment.",
+    "source_ids": [
+      "web_index_about",
+      "web_first_glance",
+      "web_t_fallback"
+    ],
+    "event_ids": [
+      "evt_2017_04_14_first_sighting"
+    ],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "first_sighting",
+      "meaningful",
+      "long_term_attachment"
+    ],
+    "temporal": {
+      "date": "2017-04-14",
+      "precision": "day"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.98,
+    "consent_review": "required_before_shared_or_public_use"
+  },
+  {
+    "memory_id": "mem_shared_temple_trips",
+    "memory_type": "episodic",
+    "category": "shared_experiences",
+    "canonical_text": "Vivek recalls going on temple trips together and says that small shared moments contributed to the growth of his feelings.",
+    "source_ids": [
+      "web_index_about"
+    ],
+    "event_ids": [],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "shared_experience",
+      "nostalgia",
+      "affection"
+    ],
+    "temporal": {
+      "date": null,
+      "precision": "unknown"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.85,
+    "consent_review": "required_before_shared_or_public_use"
+  },
+  {
+    "memory_id": "mem_search_and_reconnection",
+    "memory_type": "episodic",
+    "category": "reconnection",
+    "canonical_text": "Vivek says he searched for her using her name and memory of her face, then found her social media ID on 8 August 2023.",
+    "source_ids": [
+      "web_index_about"
+    ],
+    "event_ids": [
+      "evt_2023_08_08_social_media_id_found"
+    ],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "search",
+      "reconnection",
+      "hope",
+      "relief"
+    ],
+    "temporal": {
+      "date": "2023-08-08",
+      "precision": "day"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.9,
+    "consent_review": "required_before_shared_or_public_use"
+  },
+  {
+    "memory_id": "mem_confession",
+    "memory_type": "episodic",
+    "category": "confession",
+    "canonical_text": "Vivek says he expressed his romantic feelings on 12 August 2023. The available website content does not establish that those feelings were reciprocated.",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "event_ids": [
+      "evt_2023_08_12_confession"
+    ],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "vulnerability",
+      "honesty",
+      "romantic_feelings"
+    ],
+    "temporal": {
+      "date": "2023-08-12",
+      "precision": "day"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.9,
+    "consent_review": "required_before_shared_or_public_use"
+  },
+  {
+    "memory_id": "mem_friendship_boundary",
+    "memory_type": "relationship_context",
+    "category": "expressed_boundary",
+    "canonical_text": "According to Vivek's account, she asked that they remain friends. HER AI must preserve this as an expressed boundary and must not infer romantic consent or reciprocation.",
+    "source_ids": [
+      "web_index_about",
+      "web_index_timeline",
+      "web_for_you"
+    ],
+    "event_ids": [
+      "evt_2024_06_12_first_conversation"
+    ],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "friendship",
+      "boundary",
+      "respect"
+    ],
+    "temporal": {
+      "date": "2024-06-12",
+      "precision": "day"
+    },
+    "perspective": "Vivek's recollection of her words",
+    "confidence": 0.95,
+    "consent_review": "high_priority_boundary"
+  },
+  {
+    "memory_id": "mem_voice_clip",
+    "memory_type": "media_association",
+    "category": "voice_recording",
+    "canonical_text": "Vivek describes finding a two-second audio clip, using it as an alarm and favorite audio, and says she later confirmed that it was her voice.",
+    "source_ids": [
+      "web_my_happiness"
+    ],
+    "event_ids": [],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "voice",
+      "recognition",
+      "comfort",
+      "personal_association"
+    ],
+    "temporal": {
+      "date": null,
+      "precision": "unknown"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.85,
+    "consent_review": "explicit_permission_required_for_voice_storage_or_voice_modeling"
+  },
+  {
+    "memory_id": "mem_ai_generated_photos",
+    "memory_type": "media_association",
+    "category": "synthetic_images",
+    "canonical_text": "The Love Museum page explicitly says the photos shown as images of the two together are AI-generated and emotionally meaningful to Vivek. They must be labelled synthetic and never treated as documentary evidence of a real shared event.",
+    "source_ids": [
+      "web_love_museum"
+    ],
+    "event_ids": [],
+    "entities": [
+      "person_vivek",
+      "person_her"
+    ],
+    "emotional_tags": [
+      "imagination",
+      "aspiration",
+      "sentimental_value"
+    ],
+    "temporal": {
+      "date": null,
+      "precision": "unknown"
+    },
+    "perspective": "website disclosure",
+    "confidence": 0.99,
+    "consent_review": "label_synthetic_and_review_identity_rights"
+  },
+  {
+    "memory_id": "mem_website_as_gift",
+    "memory_type": "semantic",
+    "category": "project_motivation",
+    "canonical_text": "Vivek says the website, project, posts, edits, and saved memories were created as expressions of his feelings and as something beautiful for her.",
+    "source_ids": [
+      "web_index_about",
+      "web_for_you"
+    ],
+    "event_ids": [],
+    "entities": [
+      "person_vivek",
+      "person_her",
+      "project_her_day"
+    ],
+    "emotional_tags": [
+      "creative_expression",
+      "gift",
+      "affection",
+      "personal_project"
+    ],
+    "temporal": {
+      "date": null,
+      "precision": "ongoing"
+    },
+    "perspective": "first_person_narrative_by_vivek",
+    "confidence": 0.97,
+    "consent_review": "required_before_shared_or_public_use"
+  }
+]

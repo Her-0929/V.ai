@@ -1,0 +1,103 @@
+{
+  "source_repository": "https://github.com/Vivek0929/HER_DAY",
+  "note": "This is a manifest of image/audio references found in HTML, not a copy of the media binaries. Review the original assets and permissions before ingestion.",
+  "galleries": [
+    {
+      "gallery_id": "gallery_first_glance",
+      "page": "first-glance.html",
+      "theme": "First glance",
+      "assets": [
+        "images/first_glance/sc-4.jpg",
+        "images/first_glance/sc-3.jpg",
+        "images/first_glance/sc-5.jpg",
+        "images/first_glance/sc-1.jpg",
+        "images/first_glance/sc-2.jpg",
+        "images/first_glance/sc-6.jpg",
+        "images/first_glance/sc-7.jpg",
+        "images/first_glance/sc-8.jpg",
+        "images/first_glance/sc-9.jpg",
+        "images/first_glance/sc-10.jpg"
+      ],
+      "asset_semantics": "Gallery associated with the first-sighting narrative; filenames/alt text do not establish the real-world date or contents."
+    },
+    {
+      "gallery_id": "gallery_falling_in_love",
+      "page": "falling-in-love.html",
+      "theme": "Falling in love",
+      "assets": [
+        "images/fallinginlove/img-1.jpg",
+        "images/fallinginlove/img-2.jpg",
+        "images/fallinginlove/img-3.jpg",
+        "images/fallinginlove/img-4.jpg",
+        "images/fallinginlove/img-5.jpg",
+        "images/fallinginlove/img-6.jpg",
+        "images/fallinginlove/img-7.jpg",
+        "images/fallinginlove/img-8.jpg",
+        "images/fallinginlove/img-9.jpg",
+        "images/fallinginlove/img-10.jpg",
+        "images/fallinginlove/img-11.jpg",
+        "images/fallinginlove/img-12.jpg"
+      ],
+      "asset_semantics": "Gallery associated with the falling-in-love reflection."
+    },
+    {
+      "gallery_id": "gallery_my_happiness",
+      "page": "myhappiness.html",
+      "theme": "My happiness",
+      "assets": [
+        "images/myhappiness/Screenshot_2025-11-28-20-29-23-70_d0cade44156bc62d72068ab2af440001.jpg"
+      ],
+      "asset_semantics": "At least one image reference was confirmed in the inspected HTML; further cards may contain additional files."
+    },
+    {
+      "gallery_id": "gallery_love_museum",
+      "page": "love-museum.html",
+      "theme": "Love museum",
+      "assets": [
+        "images/aigen-images/Screenshot_2025-11-28-23-16-54-88_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/aigen-images/Screenshot_2025-11-28-23-16-36-97_d0cade44156bc62d72068ab2af440001 (1).jpg"
+      ],
+      "asset_semantics": "The page explicitly identifies these together-photos as AI-generated. Preserve synthetic-media labels."
+    },
+    {
+      "gallery_id": "gallery_for_you",
+      "page": "for_you.html",
+      "theme": "For You",
+      "assets": [
+        "images/madam/IMG_20251128_231109.jpg",
+        "images/madam/Screenshot_2025-11-28-20-28-49-65_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-20-31-56-95_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-03-30-44_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-04-05-02_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-04-28-06_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-08-08-28_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-08-30-44_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/madam/Screenshot_2025-11-28-23-08-58-00_d0cade44156bc62d72068ab2af440001.jpg",
+        "images/fallinginlove/img3.jpg"
+      ],
+      "asset_semantics": "Gallery associated with the For You reflection. File timestamps in names are not necessarily event dates."
+    },
+    {
+      "gallery_id": "gallery_what_you_mean",
+      "page": "What_you_mean.html",
+      "theme": "What you mean to me",
+      "assets": [],
+      "asset_semantics": "Inspected page contains a text reflection; image CSS slots are blank."
+    },
+    {
+      "gallery_id": "gallery_every_year",
+      "page": "last_yr_bday.html",
+      "theme": "Every year",
+      "assets": [],
+      "asset_semantics": "Inspected cards are mostly placeholders; no substantive event memories extracted."
+    }
+  ],
+  "audio": [
+    {
+      "asset_id": "audio_clip_2_seconds",
+      "description": "A two-second audio clip of her voice is described in the Myy happiness page.",
+      "binary_asset_found_in_inspected_html": false,
+      "consent_requirement": "Obtain explicit permission before storing, transcribing, or using voice for any voice model."
+    }
+  ]
+}

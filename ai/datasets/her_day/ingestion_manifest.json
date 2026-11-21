@@ -1,0 +1,90 @@
+{
+  "dataset_name": "HER AI - HER_DAY Website Memory Dataset",
+  "dataset_version": "1.0.0",
+  "generated_at_utc": "2026-11-19T05:56:14.459963+00:00",
+  "primary_source": "https://vivek0929.github.io/HER_DAY/",
+  "source_repository": "https://github.com/Vivek0929/HER_DAY",
+  "intended_use": "Personal-memory RAG ingestion and retrieval; not a model fine-tuning corpus by default.",
+  "architecture_target": {
+    "database": "PostgreSQL",
+    "vector_extension": "pgvector",
+    "retrieval": "Hybrid metadata filtering + vector similarity + recency/temporal filters",
+    "memory_layers": [
+      "episodic",
+      "semantic",
+      "emotional_context",
+      "relationship_context",
+      "media_association"
+    ]
+  },
+  "counts": {
+    "raw_source_records": 12,
+    "timeline_events": 12,
+    "structured_memories": 8,
+    "entities": 3,
+    "letters": 3,
+    "rag_chunks": 23,
+    "gallery_groups": 7
+  },
+  "processing": {
+    "text_extraction": "Extracted from the live website and its linked public GitHub HTML/text source files.",
+    "media_binary_downloaded": false,
+    "embeddings_generated": false,
+    "database_inserted": false,
+    "human_review_completed": false
+  },
+  "important_rules": [
+    "Preserve source text and source IDs.",
+    "Attribute first-person claims to Vivek; do not present them as independently verified facts.",
+    "Do not infer HER's feelings, consent, intentions, or private traits.",
+    "Treat 'just friends' as a boundary that must be respected.",
+    "Treat AI-generated images as synthetic, not documentary evidence.",
+    "Do not generate voice clones or store voice biometrics without explicit permission.",
+    "Resolve review_flags before promoting uncertain events to high-confidence canonical memories.",
+    "Generate embeddings in the HER AI backend using its configured embedding model; this export contains no vectors."
+  ],
+  "review_flags": [
+    {
+      "flag_id": "review_2024_10_26",
+      "severity": "high",
+      "issue": "Timeline title says 'The First Time Our Eyes Meet' but description says it was a road trip where mountains and ocean were seen in the same week.",
+      "action": "Ask Vivek what actually happened on 26 October 2024 and correct title or description."
+    },
+    {
+      "flag_id": "review_2024_11_05",
+      "severity": "high",
+      "issue": "Timeline title says 'The First Time Our Eyes Meet' but description says heartfelt words were spoken.",
+      "action": "Ask Vivek whether this was first eye contact, a letter/confession, or a different event."
+    },
+    {
+      "flag_id": "review_birthday_year",
+      "severity": "medium",
+      "issue": "Website says November 29 and letter date 29/11/2025; the countdown hardcodes 2025. The homepage timeline says 'Today'.",
+      "action": "Confirm the actual birthday date/year and distinguish birthday date from the year the site was published."
+    },
+    {
+      "flag_id": "review_2017_letter_date",
+      "severity": "medium",
+      "issue": "A birthday wish card is dated 14/04/2017, which is also the first-sighting date. The card's date may be a memory date rather than the letter's creation date.",
+      "action": "Confirm whether 14 April 2017 is the event date, letter date, or both."
+    },
+    {
+      "flag_id": "review_2023_two_year_gap",
+      "severity": "low",
+      "issue": "Narrative says 'after two whole years' while the first sighting is dated 14 April 2017 and social-media ID discovery is dated 8 August 2023, a little over six years later.",
+      "action": "Clarify what the two-year period refers to; preserve both source statements until resolved."
+    },
+    {
+      "flag_id": "review_relationship_context",
+      "severity": "high",
+      "issue": "The site records a 'just friends' boundary and lack of confirmed reciprocation.",
+      "action": "Keep this as a boundary/context memory. Never use romantic language as evidence that she reciprocates or wants a relationship."
+    },
+    {
+      "flag_id": "review_synthetic_images",
+      "severity": "high",
+      "issue": "The Love Museum page says some together-photos are AI-generated.",
+      "action": "Mark synthetic images clearly; do not use them as proof of actual co-presence or real events."
+    }
+  ]
+}

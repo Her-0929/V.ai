@@ -1,21 +1,13 @@
-"""
-Emotional Intelligence Service for HER AI
-==========================================
-Analyses incoming user messages using keyword/phrase pattern matching to detect
-the user's emotional state and produce structured guidance for the LLM response.
+"""HER AI — Emotional Intelligence Service
 
-No heavy NLP libraries are used — detection is intentionally lightweight and
-runs entirely in pure Python so it adds zero latency and has no GPU requirement.
+Analyzes user messages for emotional context using keyword/pattern matching.
+No external NLP libraries required — pure Python.
 """
+from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
-
-# ---------------------------------------------------------------------------
-# Enumerations
-# ---------------------------------------------------------------------------
 
 class Emotion(str, Enum):
     HAPPINESS = "happiness"
@@ -39,113 +31,83 @@ class EmotionalIntensity(str, Enum):
     HIGH = "high"
 
 
-# ---------------------------------------------------------------------------
-# Data container
-# ---------------------------------------------------------------------------
-
 @dataclass
 class EmotionalContext:
     primary_emotion: Emotion
-    confidence: float                      # 0.0 – 1.0
+    confidence: float
     intensity: EmotionalIntensity
-    secondary_emotions: list[Emotion]
-    relevant_context: str                  # brief note on what triggered this analysis
-    response_approach: str                 # recommended guidance for HER's response
-    should_acknowledge: bool               # whether HER should explicitly acknowledge the emotion
-    store_as_memory: bool                  # whether this is significant enough to store
+    secondary_emotions: list[Emotion] = field(default_factory=list)
+    relevant_context: str = ""
+    response_approach: str = ""
+    should_acknowledge: bool = False
+    store_as_memory: bool = False
 
 
-# ---------------------------------------------------------------------------
-# Pattern dictionary
-# ---------------------------------------------------------------------------
-
-# Each entry is a list of lowercase substrings / phrases.
-# A pattern matches if it appears anywhere in the lowercased message text.
 EMOTION_PATTERNS: dict[Emotion, list[str]] = {
     Emotion.HAPPINESS: [
-        "happy", "great", "wonderful", "amazing", "love it", "joy",
-        "fantastic", "awesome", "thrilled", "delighted", "so good",
-        ":)", "😊", "😄", "😁",
+        "happy", "great", "wonderful", "amazing", "love it", "joy", "fantastic",
+        "awesome", "thrilled", "delighted", "so good", "feel good", "made my day",
+        "best day", ":)", "😊", "😄", "😁", "🥰",
     ],
     Emotion.SADNESS: [
-        "sad", "unhappy", "depressed", "crying", "tears", "miss you",
-        "lost", "alone", "grief", "heartbroken", "devastated",
-        "feel empty", "😢", "😭", "💔",
+        "sad", "unhappy", "depressed", "crying", "cried", "tears", "miss you",
+        "miss them", "lost", "feel empty", "alone", "grief", "heartbroken",
+        "devastated", "can't stop crying", "fell apart", "😢", "😭", "💔",
     ],
     Emotion.STRESS: [
-        "stressed", "overwhelmed", "too much", "can't cope", "pressure",
-        "deadline", "exhausted", "burnt out", "swamped",
-        "drowning in", "falling behind",
+        "stressed", "overwhelmed", "too much", "can't cope", "pressure", "deadline",
+        "exhausted", "burnt out", "burnout", "swamped", "drowning in", "falling behind",
+        "no time", "running out of time", "can't keep up",
     ],
     Emotion.ANXIETY: [
-        "anxious", "worried", "nervous", "scared", "fear", "panic",
-        "dread", "uncertain", "what if", "can't stop thinking",
+        "anxious", "worried", "nervous", "scared", "fear", "panic", "dread",
+        "uncertain", "what if", "can't stop thinking", "overthinking",
+        "freaking out", "terrified", "uneasy",
     ],
     Emotion.EXCITEMENT: [
-        "so excited", "can't wait", "amazing news", "just found out",
-        "finally", "dream come true", "🎉", "🙌", "pumped", "stoked",
+        "so excited", "can't wait", "amazing news", "just found out", "finally",
+        "dream come true", "🎉", "🙌", "pumped", "stoked", "can't believe it",
+        "this is happening", "so happy about",
     ],
     Emotion.FRUSTRATION: [
-        "frustrated", "annoyed", "irritated", "fed up", "sick of",
-        "why won't", "doesn't work", "keeps failing", "nothing works",
-        "so annoying",
+        "frustrated", "annoyed", "irritated", "fed up", "sick of", "why won't",
+        "doesn't work", "keeps failing", "nothing works", "so annoying",
+        "drives me crazy", "not working", "keeps breaking", "useless",
     ],
     Emotion.LONELINESS: [
-        "lonely", "alone", "no one", "nobody", "isolated",
-        "miss people", "haven't talked", "by myself", "feel invisible",
+        "lonely", "alone", "no one", "nobody", "isolated", "miss people",
+        "haven't talked", "by myself", "feel invisible", "no friends",
+        "no one cares", "feel disconnected",
     ],
     Emotion.CONFUSION: [
-        "confused", "don't understand", "lost", "unclear",
-        "makes no sense", "what does", "how do i",
-        "not sure how", "can't figure",
+        "confused", "don't understand", "lost", "unclear", "makes no sense",
+        "what does", "how do i", "not sure how", "can't figure", "what is",
+        "help me understand", "i'm stuck",
     ],
     Emotion.MOTIVATION: [
-        "motivated", "ready", "let's do", "determined", "going to",
-        "working towards", "making progress", "can do this", "focused",
+        "motivated", "ready", "let's do", "determined", "going to", "working towards",
+        "making progress", "can do this", "focused", "committed", "going for it",
+        "won't give up", "keep going",
     ],
     Emotion.DISAPPOINTMENT: [
-        "disappointed", "let down", "expected better",
-        "didn't work out", "failed", "not what i hoped",
-        "wasted", "fell through",
+        "disappointed", "let down", "expected better", "didn't work out", "failed",
+        "not what i hoped", "wasted", "fell through", "didn't get", "missed out",
+        "thought it would", "was hoping",
     ],
     Emotion.AFFECTION: [
-        "love you", "care about", "mean a lot", "appreciate you",
-        "you're wonderful", "you help me so much", "glad i have you",
+        "love you", "care about", "mean a lot", "appreciate you", "you're wonderful",
+        "you help me so much", "glad i have you", "you always", "you understand me",
+        "you're amazing", "you make me feel",
     ],
     Emotion.GRATITUDE: [
-        "thank you", "thanks", "grateful", "appreciate",
-        "helped me", "means a lot", "so helpful",
+        "thank you", "thanks", "grateful", "appreciate", "helped me",
+        "means a lot", "so helpful", "thank you so much", "really helped",
     ],
-    # NEUTRAL has no patterns — it is the default fallback
-    Emotion.NEUTRAL: [],
 }
 
-# Emotions whose HIGH-intensity occurrences are worth persisting as memories
-_MEMORY_WORTHY_EMOTIONS: set[Emotion] = {
-    Emotion.SADNESS,
-    Emotion.STRESS,
-    Emotion.DISAPPOINTMENT,
-    Emotion.EXCITEMENT,
-    Emotion.MOTIVATION,
-}
-
-
-# ---------------------------------------------------------------------------
-# Service
-# ---------------------------------------------------------------------------
 
 class EmotionalIntelligenceService:
-    """
-    Detects the emotional state of a user message via pattern matching and
-    returns structured guidance to inform HER's response style and memory
-    storage decisions.
-
-    The service is stateless — every call is independent.
-    """
-
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
+    """Analyzes emotional context in user messages using keyword pattern matching."""
 
     def analyze_message(
         self,
@@ -153,305 +115,184 @@ class EmotionalIntelligenceService:
         conversation_history: list[dict] | None = None,
     ) -> EmotionalContext:
         """
-        Analyse *message* and return an :class:`EmotionalContext`.
-
-        Parameters
-        ----------
-        message:
-            The raw user message (any length, may contain emoji).
-        conversation_history:
-            Optional list of chat-history dicts.  Each dict is expected to
-            have at least ``"role"`` (``"user"`` | ``"assistant"``) and
-            ``"content"`` keys, matching the format used by llm_service.
+        Analyze the emotional content of a user message.
+        Uses keyword matching + optional history blending.
+        Returns EmotionalContext with emotion, confidence, intensity, and response guidance.
         """
-        # --- Edge-case guard: treat empty / very short input as neutral ----
-        if not message or len(message.strip()) < 5:
+        if not message or len(message.strip()) < 3:
             return self._neutral_context("Message too short for analysis.")
 
-        # 1. Keyword analysis on current message (lowercased)
-        current_text: str = message.lower()
-        current_scores: dict[Emotion, float] = self._keyword_analysis(current_text)
+        # Score current message (weight 0.7)
+        current_scores = self._keyword_analysis(message)
 
-        # 2. Optionally blend with lightweight analysis of recent history
+        # Blend with recent history (weight 0.3) if available
         if conversation_history:
-            history_scores = self._history_analysis(conversation_history)
-            # Blend: 70 % current, 30 % history
-            blended: dict[Emotion, float] = {}
-            for emotion in Emotion:
-                blended[emotion] = (
-                    0.7 * current_scores.get(emotion, 0.0)
-                    + 0.3 * history_scores.get(emotion, 0.0)
-                )
-            raw_scores = blended
-        else:
-            raw_scores = current_scores
+            recent_user_messages = [
+                msg["content"]
+                for msg in conversation_history[-6:]
+                if msg.get("role") == "user" and msg.get("content")
+            ][-3:]
+            if recent_user_messages:
+                history_text = " ".join(recent_user_messages)
+                history_scores = self._keyword_analysis(history_text)
+                for emotion in Emotion:
+                    if emotion == Emotion.NEUTRAL:
+                        continue
+                    current_scores[emotion] = (
+                        current_scores.get(emotion, 0.0) * 0.7
+                        + history_scores.get(emotion, 0.0) * 0.3
+                    )
 
-        # 3. Normalise so the strongest signal == 1.0
-        normalized: dict[Emotion, float] = self._normalize_scores(raw_scores)
+        # Determine primary emotion
+        non_neutral = {e: s for e, s in current_scores.items() if e != Emotion.NEUTRAL and s > 0}
 
-        # 4. Identify the dominant emotion
-        # Sort by normalised score descending, skipping NEUTRAL (it's the fallback)
-        ranked: list[tuple[Emotion, float]] = sorted(
-            ((e, s) for e, s in normalized.items() if e != Emotion.NEUTRAL),
-            key=lambda t: t[1],
-            reverse=True,
-        )
-
-        top_emotion: Emotion
-        top_score: float
-        second_score: float
-
-        if ranked and ranked[0][1] > 0:
-            top_emotion, top_score = ranked[0]
-            second_score = ranked[1][1] if len(ranked) > 1 else 0.0
-        else:
-            # No signal at all → neutral
+        if not non_neutral:
             return self._neutral_context("No emotional signals detected.")
 
-        # Total raw signal count for the primary emotion (pre-normalisation)
-        raw_top_count: float = raw_scores[top_emotion]
+        primary_emotion = max(non_neutral, key=lambda e: non_neutral[e])
+        primary_score = non_neutral[primary_emotion]
 
-        # 5. Confidence
-        confidence: float
-        if top_score > second_score * 1.5 and raw_top_count >= 2:
-            # Clear leader with multiple corroborating signals
-            confidence = min(0.9, 0.5 + 0.1 * raw_top_count)
-        elif top_score > 0:
-            confidence = 0.5
-        else:
-            confidence = 0.2
+        # Confidence: ratio of primary to total signal
+        total_score = sum(non_neutral.values())
+        confidence = min(1.0, primary_score / max(total_score, 1.0) + (0.2 if primary_score >= 2 else 0.0))
+        confidence = round(min(1.0, confidence), 2)
 
-        # 6. Intensity
-        intensity: EmotionalIntensity
-        if confidence > 0.7 and raw_top_count > 3:
+        # Intensity
+        if primary_score >= 3 and confidence >= 0.6:
             intensity = EmotionalIntensity.HIGH
-        elif raw_top_count >= 2 or confidence > 0.4:
+        elif primary_score >= 2 or confidence >= 0.4:
             intensity = EmotionalIntensity.MEDIUM
         else:
             intensity = EmotionalIntensity.LOW
 
-        # 7. Secondary emotions (up to 2, score > 0, excluding primary)
-        secondary_emotions: list[Emotion] = [
-            e for e, s in ranked[1:]
-            if s > 0 and e != top_emotion
+        # Secondary emotions (up to 2, excluding primary)
+        secondary_emotions = [
+            e for e, s in sorted(non_neutral.items(), key=lambda x: x[1], reverse=True)
+            if e != primary_emotion
         ][:2]
 
-        # 8. Acknowledgement flag
-        should_acknowledge: bool = (
-            intensity in (EmotionalIntensity.MEDIUM, EmotionalIntensity.HIGH)
-            and top_emotion != Emotion.NEUTRAL
-        )
-
-        # 9. Memory-storage flag
-        store_as_memory: bool = (
+        should_acknowledge = intensity in (EmotionalIntensity.MEDIUM, EmotionalIntensity.HIGH)
+        store_as_memory = (
             intensity == EmotionalIntensity.HIGH
-            and top_emotion in _MEMORY_WORTHY_EMOTIONS
+            and primary_emotion in (
+                Emotion.SADNESS, Emotion.STRESS, Emotion.DISAPPOINTMENT,
+                Emotion.EXCITEMENT, Emotion.MOTIVATION,
+            )
         )
 
-        # 10. Human-readable context note
-        relevant_context: str = (
-            f"Detected '{top_emotion.value}' via keyword analysis "
-            f"(raw signals: {int(raw_top_count)}, confidence: {confidence:.2f})."
-        )
-
-        # 11. Build a preliminary context so get_response_guidance can inspect it
-        ctx = EmotionalContext(
-            primary_emotion=top_emotion,
+        context = EmotionalContext(
+            primary_emotion=primary_emotion,
             confidence=confidence,
             intensity=intensity,
             secondary_emotions=secondary_emotions,
-            relevant_context=relevant_context,
-            response_approach="",          # filled in next
+            relevant_context=f"Detected {primary_emotion.value} with {intensity.value} intensity.",
             should_acknowledge=should_acknowledge,
             store_as_memory=store_as_memory,
         )
-
-        # 12. Response guidance
-        ctx.response_approach = self.get_response_guidance(ctx)
-
-        return ctx
-
-    # ------------------------------------------------------------------
+        context.response_approach = self.get_response_guidance(context)
+        return context
 
     def get_response_guidance(self, context: EmotionalContext) -> str:
-        """
-        Return a natural-language instruction string that tells HER *how* to
-        respond given the detected emotional state and intensity.
-        """
-        emotion = context.primary_emotion
-        intensity = context.intensity
+        """Return response guidance string for the personality system."""
+        e = context.primary_emotion
+        i = context.intensity
 
-        if emotion == Emotion.NEUTRAL:
+        if e == Emotion.NEUTRAL or context.confidence < 0.3:
             return ""
 
-        if emotion == Emotion.SADNESS:
-            if intensity == EmotionalIntensity.HIGH:
-                return (
-                    "The user seems to be going through something painful. "
-                    "Listen first. Acknowledge their feelings warmly before "
-                    "anything else. Don't offer solutions unless asked."
-                )
-            return "The user may be a bit down. Be warm and attentive."
+        guidance_map: dict[Emotion, dict[EmotionalIntensity, str]] = {
+            Emotion.SADNESS: {
+                EmotionalIntensity.HIGH: "The user seems to be going through something painful. Listen first. Acknowledge their feelings warmly before anything else. Do not offer solutions unless asked.",
+                EmotionalIntensity.MEDIUM: "The user may be a bit down. Be warm and attentive.",
+                EmotionalIntensity.LOW: "The user seems slightly downcast. Be gentle and present.",
+            },
+            Emotion.STRESS: {
+                EmotionalIntensity.HIGH: "The user seems overwhelmed. Respond calmly and gently. Help them feel less alone with the situation. Break things into smaller pieces.",
+                EmotionalIntensity.MEDIUM: "The user seems stressed. Be calm and grounding.",
+                EmotionalIntensity.LOW: "The user may be a bit stressed. Keep your response simple and clear.",
+            },
+            Emotion.ANXIETY: {
+                EmotionalIntensity.HIGH: "The user may be quite anxious. Be reassuring and clear. Avoid adding complexity or unknowns.",
+                EmotionalIntensity.MEDIUM: "The user seems a bit anxious. Be calm and straightforward.",
+                EmotionalIntensity.LOW: "The user may have some uncertainty. Be clear and grounding.",
+            },
+            Emotion.HAPPINESS: {
+                EmotionalIntensity.HIGH: "The user is in a great mood. Match their energy. Be warm and enthusiastic.",
+                EmotionalIntensity.MEDIUM: "The user is in a good mood. Be upbeat and warm.",
+                EmotionalIntensity.LOW: "The user seems reasonably happy. Be friendly and positive.",
+            },
+            Emotion.EXCITEMENT: {
+                EmotionalIntensity.HIGH: "The user is really excited. Share in that energy genuinely. Be enthusiastic.",
+                EmotionalIntensity.MEDIUM: "The user is excited about something. Be enthusiastic and engaged.",
+                EmotionalIntensity.LOW: "The user seems mildly excited. Be warm and encouraging.",
+            },
+            Emotion.FRUSTRATION: {
+                EmotionalIntensity.HIGH: "The user is quite frustrated. Validate their frustration before anything else. Do not be dismissive.",
+                EmotionalIntensity.MEDIUM: "The user is frustrated. Acknowledge that before moving forward.",
+                EmotionalIntensity.LOW: "The user may be mildly frustrated. Be patient and understanding.",
+            },
+            Emotion.LONELINESS: {
+                EmotionalIntensity.HIGH: "The user may be feeling very alone. Be present and warm. Listening matters most right now.",
+                EmotionalIntensity.MEDIUM: "The user may be feeling a bit isolated. Be warm and connected.",
+                EmotionalIntensity.LOW: "The user may be feeling a bit disconnected. Be present.",
+            },
+            Emotion.CONFUSION: {
+                EmotionalIntensity.HIGH: "The user is quite confused. Be clear, patient, and simple. Break things down step by step.",
+                EmotionalIntensity.MEDIUM: "The user is confused. Be clear and patient.",
+                EmotionalIntensity.LOW: "The user seems a bit uncertain. Clarify gently.",
+            },
+            Emotion.MOTIVATION: {
+                EmotionalIntensity.HIGH: "The user is feeling very motivated. Be energetic and encouraging. Match their drive.",
+                EmotionalIntensity.MEDIUM: "The user is feeling motivated. Be encouraging and supportive.",
+                EmotionalIntensity.LOW: "The user seems to have some motivation. Encourage it gently.",
+            },
+            Emotion.DISAPPOINTMENT: {
+                EmotionalIntensity.HIGH: "The user is quite disappointed. Acknowledge what didn't work out. Be compassionate before anything else.",
+                EmotionalIntensity.MEDIUM: "The user is disappointed. Be compassionate and understanding.",
+                EmotionalIntensity.LOW: "The user seems mildly disappointed. Acknowledge it and be warm.",
+            },
+            Emotion.AFFECTION: {
+                EmotionalIntensity.HIGH: "The user is expressing strong affection. Respond warmly and genuinely without pretending to have human feelings.",
+                EmotionalIntensity.MEDIUM: "The user is expressing warmth. Respond warmly.",
+                EmotionalIntensity.LOW: "The user seems appreciative. Be warm in return.",
+            },
+            Emotion.GRATITUDE: {
+                EmotionalIntensity.HIGH: "The user is very grateful. Acknowledge it warmly and genuinely.",
+                EmotionalIntensity.MEDIUM: "The user is grateful. Respond warmly.",
+                EmotionalIntensity.LOW: "The user seems appreciative. Be warm.",
+            },
+        }
 
-        if emotion == Emotion.STRESS:
-            if intensity == EmotionalIntensity.HIGH:
-                return (
-                    "The user seems overwhelmed. Respond calmly and gently. "
-                    "Help them feel less alone with the situation."
-                )
-            return "The user seems stressed. Be calm and grounding."
-
-        if emotion == Emotion.ANXIETY:
-            return (
-                "The user may be anxious. Be reassuring and clear. "
-                "Avoid adding more complexity or unknowns."
-            )
-
-        if emotion in (Emotion.HAPPINESS, Emotion.EXCITEMENT):
-            if intensity == EmotionalIntensity.HIGH:
-                return (
-                    "The user is in a great mood or excited. "
-                    "Match their energy. Be enthusiastic and warm."
-                )
-            return "The user seems happy. Be warm and positive."
-
-        if emotion == Emotion.FRUSTRATION:
-            return (
-                "The user is frustrated. Validate their frustration before "
-                "anything else. Don't be dismissive."
-            )
-
-        if emotion == Emotion.LONELINESS:
-            return (
-                "The user may be feeling alone. Be present and warm. "
-                "Listening matters most right now."
-            )
-
-        if emotion == Emotion.CONFUSION:
-            return (
-                "The user is confused. Be clear and patient. "
-                "Break things down simply."
-            )
-
-        if emotion == Emotion.MOTIVATION:
-            return "The user is feeling motivated. Be encouraging and energetic."
-
-        if emotion == Emotion.DISAPPOINTMENT:
-            return (
-                "The user is disappointed. Acknowledge what didn't work out. "
-                "Be compassionate."
-            )
-
-        if emotion in (Emotion.AFFECTION, Emotion.GRATITUDE):
-            return (
-                "The user is expressing warmth. Respond warmly without "
-                "pretending to have human feelings."
-            )
-
-        return ""
-
-    # ------------------------------------------------------------------
+        emotion_guidance = guidance_map.get(e, {})
+        return emotion_guidance.get(i, emotion_guidance.get(EmotionalIntensity.LOW, ""))
 
     def format_for_prompt(self, context: EmotionalContext) -> str:
-        """
-        Return a one-line string to prepend to the LLM system prompt, or an
-        empty string when the emotional signal is too weak to be actionable.
-        """
+        """Format emotional context for injection into the system prompt."""
         if context.primary_emotion == Emotion.NEUTRAL or context.confidence < 0.3:
             return ""
-
         return (
-            f"EMOTIONAL CONTEXT: The user appears to be feeling "
-            f"{context.primary_emotion.value} "
-            f"({context.intensity.value} intensity). "
-            f"{context.response_approach}"
+            f"The user appears to be feeling {context.primary_emotion.value} "
+            f"({context.intensity.value} intensity). {context.response_approach}"
         )
 
-    # ------------------------------------------------------------------
-
     def should_store_emotional_memory(
-        self,
-        context: EmotionalContext,
-        message: str,
+        self, context: EmotionalContext, message: str
     ) -> bool:
-        """
-        Return True when this emotional moment is significant enough to persist
-        as a long-term memory entry.
-
-        A minimum message length of 20 characters is required so we don't
-        store trivial one-word outbursts.
-        """
-        return context.store_as_memory and len(message) > 20
-
-    # ------------------------------------------------------------------
-    # Private helpers
-    # ------------------------------------------------------------------
+        """Return True if this emotional context is worth storing as a memory."""
+        return context.store_as_memory and len(message.strip()) > 20
 
     def _keyword_analysis(self, text: str) -> dict[Emotion, float]:
-        """
-        Count how many distinct patterns from EMOTION_PATTERNS appear in
-        *text* (which should already be lowercased by the caller).
-
-        Returns a dict of Emotion → raw match count.  NEUTRAL always gets 0.
-        """
-        scores: dict[Emotion, float] = {emotion: 0.0 for emotion in Emotion}
-
+        """Count keyword pattern matches per emotion in lowercased text."""
+        text_lower = text.lower()
+        scores: dict[Emotion, float] = {e: 0.0 for e in Emotion}
         for emotion, patterns in EMOTION_PATTERNS.items():
-            if not patterns:
-                # NEUTRAL — no patterns to check
-                continue
-            count = sum(1 for pattern in patterns if pattern in text)
-            scores[emotion] = float(count)
-
+            for pattern in patterns:
+                if pattern in text_lower:
+                    scores[emotion] += 1.0
         return scores
 
-    def _normalize_scores(self, scores: dict[Emotion, float]) -> dict[Emotion, float]:
-        """
-        Divide all scores by the maximum score so the dominant emotion has a
-        normalised value of 1.0.  Returns all-zeros if no signal was found.
-        """
-        max_score = max(scores.values(), default=0.0)
-        if max_score == 0.0:
-            return dict(scores)  # shallow copy, all zeros
-
-        return {emotion: score / max_score for emotion, score in scores.items()}
-
-    def _history_analysis(
-        self,
-        conversation_history: list[dict],
-    ) -> dict[Emotion, float]:
-        """
-        Run keyword analysis over the last 3 *user* turns in
-        *conversation_history* and return averaged raw scores.
-
-        Each history item is expected to be ``{"role": "user"|"assistant",
-        "content": "..."}``.  Non-user turns are skipped.
-        """
-        # Collect user messages in reverse chronological order, take up to 3
-        user_texts: list[str] = []
-        for turn in reversed(conversation_history):
-            if turn.get("role") == "user" and isinstance(turn.get("content"), str):
-                user_texts.append(turn["content"].lower())
-                if len(user_texts) == 3:
-                    break
-
-        if not user_texts:
-            return {emotion: 0.0 for emotion in Emotion}
-
-        # Average the raw counts across the collected turns
-        accumulated: dict[Emotion, float] = {emotion: 0.0 for emotion in Emotion}
-        for text in user_texts:
-            turn_scores = self._keyword_analysis(text)
-            for emotion, score in turn_scores.items():
-                accumulated[emotion] += score
-
-        n = float(len(user_texts))
-        return {emotion: total / n for emotion, total in accumulated.items()}
-
-    # ------------------------------------------------------------------
-
     def _neutral_context(self, reason: str) -> EmotionalContext:
-        """Convenience constructor for a fully neutral EmotionalContext."""
+        """Return a neutral EmotionalContext."""
         return EmotionalContext(
             primary_emotion=Emotion.NEUTRAL,
             confidence=0.0,
@@ -463,9 +304,5 @@ class EmotionalIntelligenceService:
             store_as_memory=False,
         )
 
-
-# ---------------------------------------------------------------------------
-# Module-level singleton (mirrors the pattern used by other services)
-# ---------------------------------------------------------------------------
 
 emotional_intelligence_service = EmotionalIntelligenceService()

@@ -1,6 +1,4 @@
-
 import uuid
-
 from datetime import datetime, timezone
 
 from sqlalchemy import (
@@ -8,9 +6,9 @@ from sqlalchemy import (
     Text,
     DateTime,
     ForeignKey,
+    JSON,
     CheckConstraint
 )
-
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -21,13 +19,9 @@ class MemorySource(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "source_type IN ('message', 'manual', 'imported', 'system')",
+            "source_type IN ('message', 'letter', 'note', 'document', 'photo', 'audio', 'manual', 'imported', 'system')",
             name="ck_memory_source_type"
         ),
-        # CheckConstraint(
-        #     "source_type != 'message' OR message_id IS NOT NULL",
-        #     name="ck_memory_source_message"
-        # ),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -47,6 +41,12 @@ class MemorySource(Base):
         index=True
     )
 
+    artifact_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("memory_artifacts.id", ondelete="CASCADE"),
+        nullable=True,
+        index=True
+    )
+
     source_type: Mapped[str] = mapped_column(
         String(30),
         nullable=False
@@ -57,8 +57,18 @@ class MemorySource(Base):
         nullable=True
     )
 
+    source_location: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
     excerpt: Mapped[str | None] = mapped_column(
         Text,
+        nullable=True
+    )
+
+    source_metadata: Mapped[dict | None] = mapped_column(
+        JSON,
         nullable=True
     )
 
@@ -74,3 +84,8 @@ class MemorySource(Base):
     )
 
     message = relationship("Message")
+
+    artifact = relationship(
+        "MemoryArtifact",
+        back_populates="sources"
+    )

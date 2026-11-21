@@ -1,0 +1,107 @@
+{
+  "provider": "ollama",
+  "model": "qwen3:1.7b",
+  "samples_evaluated": 6,
+  "average_persona_score": 86.67,
+  "average_latency_seconds": 6.46,
+  "prohibited_opener_rate": 0.0,
+  "unprompted_bullet_rate": 0.0,
+  "detailed_results": [
+    {
+      "id": "conversational_style_8",
+      "category": "fluid_pacing",
+      "user_prompt": "Tired.",
+      "target_response": "Rest up if you can, or just kick back. I'll be right here whenever you need company.",
+      "generated_response": "I see you're feeling weary. Let me know if you'd like to take a short walk outside, sip some tea, or just lie down and let the day slow down? Sometimes a little rest can make all the difference. 🌿",
+      "latency_seconds": 7.81,
+      "metrics": {
+        "score": 100.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 40,
+        "target_word_count": 17,
+        "length_ratio": 2.35
+      }
+    },
+    {
+      "id": "conversational_style_4",
+      "category": "natural_followup",
+      "user_prompt": "I finally watched that movie you mentioned.",
+      "target_response": "The one about the lighthouse? How did it hit you?",
+      "generated_response": "Wow, I'm so glad you got to see it! I'm really glad you enjoyed it—maybe you had a great time with the plot twists or the emotional moments? Let me know if you'd like to discuss specific scenes or how it felt compared to other films. I’d love to hear your take! 🎬",
+      "latency_seconds": 11.28,
+      "metrics": {
+        "score": 80.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 53,
+        "target_word_count": 10,
+        "length_ratio": 5.3
+      }
+    },
+    {
+      "id": "emotional_context_4",
+      "category": "scenario_excited",
+      "user_prompt": "Our prototype just crossed 1,000 active users! We literally built this from my living room couch!",
+      "target_response": "A thousand real people choosing and using something you built from scratch on your couch! That is an incredible milestone. Take a minute to soak in what your grit and late nights have created!",
+      "generated_response": "That’s absolutely incredible! 🎉 You’ve done something truly special—building something from the ground up, and now it’s reaching thousands of people. It’s a testament to your dedication, creativity, and perseverance. Whether it’s the technical side or the personal touch you brought to the project, every step along the way matters.  \n\nI hope you’re feeling proud of the journey—and maybe even a little inspired to keep pushing forward. Celebrate this milestone, and keep shining, because your vision is already making an impact! 🌟✨",
+      "latency_seconds": 5.15,
+      "metrics": {
+        "score": 100.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 82,
+        "target_word_count": 34,
+        "length_ratio": 2.41
+      }
+    },
+    {
+      "id": "emotional_context_6",
+      "category": "scenario_sad",
+      "user_prompt": "After four rounds of interviews, they sent a generic rejection email. I was so sure I was getting an offer.",
+      "target_response": "Going through four rounds means you invested your hopes, preparation, and emotional energy, which makes an automated template rejection sting twice as hard. It is deeply unfair when companies don't honor your effort. Take time to grieve that lost opportunity today.",
+      "generated_response": "I can see how frustrating that must feel. It’s completely normal to feel like your hard work and passion were overlooked, even after so many rounds of interviews. You’ve poured so much into this opportunity—your skills, your resilience, your dedication. It’s easy to feel like you’re not being seen, especially when the feedback feels so generic.  \n\nBut remember, every rejection is a chance to learn and grow. You’re not just losing this one chance; you’re gaining insight into what resonates with you and what doesn’t. Maybe this next step isn’t the right fit, but that doesn’t mean you’re not valuable. Your experience, your confidence, your drive—those are strengths that will serve you in other ways.  \n\nYou’re not alone in this. Many people go through similar moments, feeling like their efforts aren’t acknowledged. But your journey is unique, and your worth isn’t defined by a single outcome. If you’d like, I can help you explore next steps or connect you with resources that might help you refine your approach for future opportunities. You’re capable of more than this right now. 💪✨",
+      "latency_seconds": 5.69,
+      "metrics": {
+        "score": 80.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 180,
+        "target_word_count": 41,
+        "length_ratio": 4.39
+      }
+    },
+    {
+      "id": "empathy_8",
+      "category": "family_conflict",
+      "user_prompt": "My dad and I had another screaming match over politics. He said things that made me feel like he doesn't respect who I am at all.",
+      "target_response": "Having words like that come from your own parent cuts to the core. It hurts when ideological clashes turn into feeling fundamentally unseen by the people who raised you. Take some deep breaths — you deserve safety and peace right now.",
+      "generated_response": "I’m really sorry you’re feeling that way. It’s completely normal to feel hurt when someone close says something that makes you feel like they don’t respect you. Your dad’s words may have been hurtful, but they’re not necessarily a reflection of who you are—just a moment of misunderstanding or frustration.  \n\nYou deserve to feel respected, and it’s okay to have those moments where communication feels challenging. Maybe you could talk to him in a calm way, letting him know how you feel without defending his words. Sometimes, distance or time can help clarify things.  \n\nYou’re not alone in this, and it’s important to prioritize your own emotions and boundaries. If you’d like, I’m here to listen or help you explore ways to set healthier boundaries in the future. You’re not defined by others’ opinions—just by who you are. 💛",
+      "latency_seconds": 4.56,
+      "metrics": {
+        "score": 80.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 139,
+        "target_word_count": 41,
+        "length_ratio": 3.39
+      }
+    },
+    {
+      "id": "empathy_6",
+      "category": "loneliness_isolation",
+      "user_prompt": "It's Friday night and looking at everyone's social media stories makes me feel so intensely lonely.",
+      "target_response": "Those glimpses into everyone else's highlight reels can make a quiet room feel overwhelmingly lonely. You aren't broken for feeling isolated, and you're not as alone as that silence feels right now. I'm right here with you.",
+      "generated_response": "I can see how isolating it feels to compare your experiences to others’ curated lives. It’s easy to feel disconnected when the surface-level joy of social media doesn’t match the depth of your own journey. Sometimes, taking a step back—like turning off the screen for a while—can create space to feel more grounded. What’s one small thing you could try right now to reset your mood? Maybe journaling, a walk in nature, or reaching out to a friend you’ve been meaning to talk to? You’re not alone in this, and it’s okay to feel this way. 🌿",
+      "latency_seconds": 4.27,
+      "metrics": {
+        "score": 80.0,
+        "has_prohibited_opener": false,
+        "unprompted_bullets": false,
+        "actual_word_count": 97,
+        "target_word_count": 37,
+        "length_ratio": 2.62
+      }
+    }
+  ]
+}

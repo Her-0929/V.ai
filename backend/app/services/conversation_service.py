@@ -1,12 +1,15 @@
 
+import logging
 from uuid import UUID
 from datetime import datetime, timezone
 
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, or_, func
 from sqlalchemy.orm import Session
 
 from app.models.conversation import Conversation
 from app.models.message import Message
+
+logger = logging.getLogger(__name__)
 
 
 class ConversationService:
@@ -180,5 +183,134 @@ class ConversationService:
             db.rollback()
             raise
 
+    @staticmethod
+    async def generate_title(
+        db: Session,
+        user_id: UUID,
+        conversation_id: UUID,
+    ) -> str | None:
+        """Generate a short title for a conversation using the LLM."""
+        from app.services.llm_service import llm_service
+
+        conversation = ConversationService.get_conversation(db, user_id, conversation_id)
+        if not conversation:
+            return None
+
+        # Fetch first few messages for context
+        messages = db.execute(
+            select(Message)
+            .where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at)
+            .limit(6)
+        ).scalars().all()
+
+        if not messages:
+            return None
+
+        convo_text = "\n".join(
+            f"{m.role.upper()}: {m.content[:300]}" for m in messages
+        )
+
+        prompt = (
+            "Generate a short title (maximum 8 words) for this conversation. "
+            "Reply with ONLY the title — no quotes, no punctuation at the end:\n\n"
+            + convo_text
+        )
+
+        try:
+            raw = await llm_service.generate_response([
+                {"role": "user", "content": prompt}
+            ])
+            title = raw.strip().strip('"\'').strip()[:200]
+
+            if title:
+                conversation.title = title
+                conversation.updated_at = datetime.now(timezone.utc)
+                db.commit()
+
+            return title or None
+
+        except Exception as exc:
+            logger.warning("Title generation LLM call failed: %s", exc)
+            return None
+
+    @staticmethod
+    async def summarize_conversation(
+        db: Session,
+        user_id: UUID,
+        conversation_id: UUID,
+        max_messages: int = 50,
+    ) -> str:
+        """Generate a concise summary of a conversation."""
+        from app.services.llm_service import llm_service
+
+        conversation = ConversationService.get_conversation(db, user_id, conversation_id)
+        if not conversation:
+            raise ValueError("Conversation not found.")
+
+        messages = db.execute(
+            select(Message)
+            .where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at)
+            .limit(max_messages)
+        ).scalars().all()
+
+        if not messages:
+            return "This conversation has no messages yet."
+
+        convo_text = "\n".join(
+            f"{m.role.upper()}: {m.content[:500]}" for m in messages
+        )
+
+        prompt = (
+            "Summarize this conversation in 3–5 sentences. "
+            "Focus on the most important facts, decisions, and context shared. "
+            "Be concise and factual:\n\n" + convo_text
+        )
+
+        summary = await llm_service.generate_response([
+            {"role": "user", "content": prompt}
+        ])
+        return summary.strip()
+
+    @staticmethod
+    def search_conversations(
+        db: Session,
+        user_id: UUID,
+        query: str,
+        limit: int = 20,
+    ) -> list[Conversation]:
+        """Search conversations by title or message content (ILIKE)."""
+        # Title match
+        title_ids = db.execute(
+            select(Conversation.id).where(
+                Conversation.user_id == user_id,
+                Conversation.title.ilike(f"%{query}%"),
+            )
+        ).scalars().all()
+
+        # Message content match
+        msg_ids = db.execute(
+            select(Conversation.id)
+            .join(Message, Message.conversation_id == Conversation.id)
+            .where(
+                Conversation.user_id == user_id,
+                Message.content.ilike(f"%{query}%"),
+            )
+            .distinct()
+        ).scalars().all()
+
+        all_ids = list(set(list(title_ids) + list(msg_ids)))
+        if not all_ids:
+            return []
+
+        return db.execute(
+            select(Conversation)
+            .where(Conversation.id.in_(all_ids))
+            .order_by(desc(Conversation.updated_at))
+            .limit(limit)
+        ).scalars().all()
+
 
 conversation_service = ConversationService()
+

@@ -1,0 +1,187 @@
+[
+  {
+    "event_id": "evt_2017_04_14_first_sighting",
+    "date": "2017-04-14",
+    "date_precision": "day",
+    "title": "The First Look",
+    "event_type": "first_sighting",
+    "description": "Vivek recalls first seeing her as she boarded a bus. He did not know her name or who she was at the time.",
+    "original_quote": "The moment my eyes met you... my life found its purpose. Everything began this day.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_about",
+      "web_first_glance",
+      "web_t_fallback"
+    ],
+    "confidence": "explicit_date_in_multiple_sources",
+    "review_status": "needs_user_confirmation_of_event_details"
+  },
+  {
+    "event_id": "evt_2023_08_08_social_media_id_found",
+    "date": "2023-08-08",
+    "date_precision": "day",
+    "title": "The Day I Found Your ID",
+    "event_type": "reconnection_search",
+    "description": "Vivek says he found her social media ID after a period of searching using her name and memory of her face/smile.",
+    "original_quote": "After years of searching only with your name and the memory of your smile… I finally found you. My hands were shaking.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2023_08_12_confession",
+    "date": "2023-08-12",
+    "date_precision": "day",
+    "title": "The Day I Confessed",
+    "event_type": "confession",
+    "description": "Vivek says he confessed his feelings. The timeline does not state whether they were reciprocated.",
+    "original_quote": "Whether you accepted it or not, loving you was the most honest thing I’ve ever done.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2023_12_16_saw_again",
+    "date": "2023-12-16",
+    "date_precision": "day",
+    "title": "After Years, Seeing You Again",
+    "event_type": "in_person_encounter",
+    "description": "The timeline describes seeing her again after the confession.",
+    "original_quote": "The day we saw each other after i confessed",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2024_06_12_first_conversation",
+    "date": "2024-06-12",
+    "date_precision": "day",
+    "title": "The First Time You Talked to Me",
+    "event_type": "conversation_and_boundary",
+    "description": "The timeline says she spoke to Vivek and suggested they remain friends. Store this as her expressed boundary, not as romantic reciprocation.",
+    "original_quote": "And when you said ‘let’s be friends’, it felt like sunlight after years of rain. Friendship with you was a blessing I never expected to receive.",
+    "perspective": "Vivek's recollection of her words",
+    "source_ids": [
+      "web_index_timeline",
+      "web_index_about"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "respect_boundary_and_confirm_exact_context"
+  },
+  {
+    "event_id": "evt_2024_10_10_saw_from_distance",
+    "date": "2024-10-10",
+    "date_precision": "day",
+    "title": "The Days I Saw You Without You Knowing",
+    "event_type": "in_person_sighting",
+    "description": "Vivek recalls seeing her walk past without her noticing him.",
+    "original_quote": "You walked past, unaware… but those few seconds were entire universes for me.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2024_10_24_saw_from_distance",
+    "date": "2024-10-24",
+    "date_precision": "day",
+    "title": "The Days I Saw You Without You Knowing",
+    "event_type": "in_person_sighting",
+    "description": "Vivek recalls another brief sighting.",
+    "original_quote": "For a moment, life felt right again. Just seeing you was enough to make my day.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2024_10_26_ambiguous",
+    "date": "2024-10-26",
+    "date_precision": "day",
+    "title": "The First Time Our Eyes Meet",
+    "event_type": "unresolved_timeline_entry",
+    "description": "The title suggests an eye-contact event, but the description refers to a road trip involving mountains and the ocean in the same week. The event meaning is ambiguous.",
+    "original_quote": "That road trip where we saw the mountains and the ocean in the same week. Unforgettable.",
+    "perspective": "Website-authored recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_date_but_conflicting_description",
+    "review_status": "manual_correction_required"
+  },
+  {
+    "event_id": "evt_2024_11_05_ambiguous",
+    "date": "2024-11-05",
+    "date_precision": "day",
+    "title": "The First Time Our Eyes Meet",
+    "event_type": "unresolved_timeline_entry",
+    "description": "The title refers to first eye contact, while the description refers to heartfelt words. The actual event needs clarification.",
+    "original_quote": "The most honest and heartfelt words I've ever spoken. I meant every letter.",
+    "perspective": "Website-authored recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_date_but_conflicting_description",
+    "review_status": "manual_correction_required"
+  },
+  {
+    "event_id": "evt_2025_04_09_special_day",
+    "date": "2025-04-09",
+    "date_precision": "day",
+    "title": "The Most Beautiful Day",
+    "event_type": "special_in_person_day",
+    "description": "Vivek describes seeing her in person for the whole day and remembers it as especially meaningful.",
+    "original_quote": "Seeing you was the best gift my heart ever received. You in front of me that Whole day… I carried it inside me like a treasure.",
+    "perspective": "Vivek's recollection",
+    "source_ids": [
+      "web_index_timeline"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_user_confirmation"
+  },
+  {
+    "event_id": "evt_2025_10_31_deserve_better",
+    "date": "2025-10-31",
+    "date_precision": "day",
+    "title": "When You Said 'You Deserve Better'",
+    "event_type": "relationship_conversation",
+    "description": "The timeline attributes the phrase 'You deserve better' to her. The page does not provide the complete conversation or context.",
+    "original_quote": "You said I deserve better… But better doesn’t exist for me.",
+    "perspective": "Vivek's recollection of her words",
+    "source_ids": [
+      "web_index_timeline",
+      "web_falling_in_love"
+    ],
+    "confidence": "explicit_timeline_date",
+    "review_status": "needs_context_confirmation"
+  },
+  {
+    "event_id": "evt_2025_11_29_birthday",
+    "date": "2025-11-29",
+    "date_precision": "day",
+    "title": "Your Beautiful Birthday",
+    "event_type": "birthday_and_greeting",
+    "description": "The site countdown and birthday letter identify November 29, 2025 as the birthday target/date. The timeline itself labels this event 'Today'.",
+    "original_quote": "A new chapter begins. I can't wait to see all the memories you’ll make next.",
+    "perspective": "Website content",
+    "source_ids": [
+      "web_index_timeline",
+      "web_index_letter_03"
+    ],
+    "confidence": "date_supported_by_countdown_and_letter",
+    "review_status": "confirm_year_and_date_before_treating_as_birth_date"
+  }
+]

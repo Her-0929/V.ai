@@ -3,7 +3,7 @@ import uuid
 
 from datetime import datetime, timezone
 
-from sqlalchemy import String, DateTime
+from sqlalchemy import String, DateTime, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -30,6 +30,18 @@ class User(Base):
         nullable=False,
         index=True
     )
+
+    hashed_password: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False
+    )
+
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -58,6 +70,12 @@ class User(Base):
 
     preferences = relationship(
         "UserPreference",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+
+    artifacts = relationship(
+        "MemoryArtifact",
         back_populates="user",
         cascade="all, delete-orphan"
     )
