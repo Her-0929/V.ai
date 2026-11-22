@@ -1,6 +1,10 @@
 .env
 .env.*
 !.env.example
+.freebuff
+node_modules/
+frontend/.next/
+frontend/node_modules/
 
 __pycache__/
 *.py[cod]
