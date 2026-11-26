@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
-  Heart,
   User,
   Sparkles,
   ChevronDown,
@@ -14,6 +13,7 @@ import {
 import { MessageResponse, RetrievedMemoryInfo } from '../../types/api';
 import { Badge } from '../ui/Badge';
 import { getEmotionColor, formatPrecision } from '../../lib/utils';
+import { HER_COMPANION } from '../../lib/herData';
 
 interface MessageBubbleProps {
   message: MessageResponse;
@@ -39,19 +39,20 @@ export function MessageBubble({ message, retrievedMemories }: MessageBubbleProps
       }`}
     >
       {/* Avatar */}
-      <div
-        className={`w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs ${
-          isAssistant
-            ? 'bg-[#E07A5F] text-white'
-            : 'bg-[#EFE7DC] dark:bg-[#38332E] text-[#6B5E57] dark:text-[#EAE3DC]'
-        }`}
-      >
-        {isAssistant ? (
-          <Heart className="w-4 h-4 fill-white/90" />
-        ) : (
+      {isAssistant ? (
+        <div className="relative w-9 h-9 rounded-2xl overflow-hidden shrink-0 shadow-2xs ring-2 ring-[#E07A5F]/30 bg-[#E07A5F] group-hover:ring-[#D96B43] transition-all">
+          <img
+            src={HER_COMPANION.avatarSm}
+            alt={HER_COMPANION.name}
+            className="w-full h-full object-cover object-top"
+          />
+          <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1.5 ring-white dark:ring-[#221F1D]" />
+        </div>
+      ) : (
+        <div className="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 shadow-2xs bg-[#EFE7DC] dark:bg-[#38332E] text-[#6B5E57] dark:text-[#EAE3DC]">
           <User className="w-4 h-4" />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Message Content Container */}
       <div className={`flex flex-col min-w-0 ${isAssistant ? 'items-start' : 'items-end'}`}>

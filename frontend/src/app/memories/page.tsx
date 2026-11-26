@@ -6,6 +6,7 @@ import { AppLayout } from '../../components/layout/AppLayout';
 import { MemoryCard } from '../../components/memories/MemoryCard';
 import { ProvenanceModal } from '../../components/memories/ProvenanceModal';
 import { MemoryCorrectionModal } from '../../components/memories/MemoryCorrectionModal';
+import { OpenWhenLetters } from '../../components/memories/OpenWhenLetters';
 import { Spinner } from '../../components/ui/Spinner';
 import { Button } from '../../components/ui/Button';
 import { api } from '../../lib/api';
@@ -19,6 +20,7 @@ import {
   Brain,
   FolderUp,
   X,
+  Camera,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -196,22 +198,35 @@ function MemoryExplorerContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Compass className="w-5 h-5 text-[#D96B43]" />
+            <span className="text-2xl">💌</span>
             <h1 className="font-serif text-2xl sm:text-3xl font-medium text-[#2C2623] dark:text-[#F7F3EE]">
-              Memory Explorer
+              Letters & Little Memories
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-[#7C6E64] dark:text-[#A89C94]">
-            Browse, search, inspect provenance, and correct memories stored by HER.
+            Envelopes sealed with care, thoughts written just for you, and little moments saved forever.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 self-start sm:self-auto">
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="w-3.5 h-3.5 mr-1.5" />
-            <span>Export All ({total})</span>
-          </Button>
+          <Link
+            href="/profile"
+            className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#201D1B] border border-[#E8DFD5] dark:border-[#38332E] text-xs font-semibold text-rose-500 hover:border-rose-300 transition-all shadow-2xs flex items-center gap-1.5"
+          >
+            <Camera className="w-3.5 h-3.5" />
+            <span>Open Scrapbook</span>
+          </Link>
         </div>
+      </div>
+
+      {/* Interactive Open When Letters */}
+      <OpenWhenLetters />
+
+      {/* Notes & Search Header */}
+      <div className="flex items-center justify-between mb-3 px-1">
+        <h3 className="font-serif text-lg font-medium text-[#2C2623] dark:text-[#F7F3EE]">
+          Preserved Notes & Memories ({total})
+        </h3>
       </div>
 
       {/* Semantic Search & Category Bar */}

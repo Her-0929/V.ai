@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function IngestPage() {
-  const [activeTab, setActiveTab] = useState<'file' | 'text'>('file');
+  const [activeTab, setActiveTab] = useState<'file' | 'text'>('text');
   const [recentJobs, setRecentJobs] = useState<MemoryArtifactJobResponse[]>([]);
 
   const handleJobCreated = (job: MemoryArtifactJobResponse) => {
@@ -28,44 +28,63 @@ export default function IngestPage() {
         {/* Title */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-1">
-            <UploadCloud className="w-5 h-5 text-[#D96B43]" />
+            <span className="text-2xl">✨</span>
             <h1 className="font-serif text-2xl sm:text-3xl font-medium text-[#2C2623] dark:text-[#F7F3EE]">
-              Personal Data Ingestion
+              Wish Capsule & Memories
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-[#7C6E64] dark:text-[#A89C94]">
-            Provide personal letters, notes, and documents. HER extracts long-term factual memories and timestamps.
+            Share a secret thought, a wish for the future, or write down a little story you want preserved in our world.
           </p>
+        </div>
+
+        {/* Companion Welcome Banner */}
+        <div className="mb-6 p-4 sm:p-5 rounded-3xl bg-white dark:bg-[#201D1B] border border-rose-100 dark:border-[#38332E] shadow-2xs flex items-center gap-4">
+          <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shrink-0 ring-2 ring-rose-300 bg-[#E07A5F] shadow-xs">
+            <img
+              src="/her/white_festive.jpg"
+              alt="You"
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
+          <div>
+            <h3 className="font-serif text-base sm:text-lg font-medium text-[#2C2623] dark:text-[#F7F3EE]">
+              Leave a note in our capsule 💌
+            </h3>
+            <p className="text-xs text-[#7C6E64] dark:text-[#A89C94] leading-relaxed">
+              Every word you write here becomes part of this universe. It will always be remembered and cherished.
+            </p>
+          </div>
         </div>
 
         {/* Tab Selector */}
         <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#F0EAE1] dark:bg-[#201D1B] max-w-md mb-6">
           <button
-            onClick={() => setActiveTab('file')}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === 'file'
-                ? 'bg-white dark:bg-[#2A2623] text-[#D96B43] shadow-xs'
-                : 'text-[#6B5E57] dark:text-[#A89C94] hover:text-[#2C2623]'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>Upload Files (PDF / TXT)</span>
-          </button>
-          <button
             onClick={() => setActiveTab('text')}
             className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               activeTab === 'text'
-                ? 'bg-white dark:bg-[#2A2623] text-[#D96B43] shadow-xs'
+                ? 'bg-white dark:bg-[#2A2623] text-rose-600 shadow-xs'
                 : 'text-[#6B5E57] dark:text-[#A89C94] hover:text-[#2C2623]'
             }`}
           >
             <PenLine className="w-4 h-4" />
-            <span>Draft Note / Letter</span>
+            <span>Write A Note / Wish ✍️</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('file')}
+            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'file'
+                ? 'bg-white dark:bg-[#2A2623] text-rose-600 shadow-xs'
+                : 'text-[#6B5E57] dark:text-[#A89C94] hover:text-[#2C2623]'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>Upload Story File 📄</span>
           </button>
         </div>
 
         {/* Tab Content Box */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#201D1B] border border-[#EAE2D8] dark:border-[#38332E] shadow-2xs mb-8">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#201D1B] border border-rose-100 dark:border-[#38332E] shadow-2xs mb-8">
           {activeTab === 'file' ? (
             <FileUploader onJobCreated={handleJobCreated} />
           ) : (
@@ -73,11 +92,11 @@ export default function IngestPage() {
           )}
         </div>
 
-        {/* Ingestion Pipeline Notice */}
-        <div className="p-4 rounded-2xl bg-[#FAF2EB] dark:bg-[#2C211A] border border-[#F3C4B3]/50 dark:border-[#52342A] flex items-start gap-3 text-xs text-[#7C6E64] dark:text-[#D1C6BD] mb-8">
-          <ShieldCheck className="w-4 h-4 text-[#D96B43] shrink-0 mt-0.5" />
+        {/* Sweet Notice */}
+        <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 flex items-start gap-3 text-xs text-rose-800 dark:text-rose-300 mb-8 font-serif italic">
+          <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
           <div className="leading-relaxed">
-            <strong>Idempotency & Isolation:</strong> Uploaded files are hashed with SHA-256 for duplicate avoidance. Fact extraction executes asynchronously in background tasks without blocking your session.
+            <strong>Private & Sacred:</strong> Whatever you write here is preserved safely. This space is entirely your own.
           </div>
         </div>
 

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Things: Happy Birthday  My Love!</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Great Vibes (Cursive/Script Font for titles) -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <!-- Load Tone.js for simple background music -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.58/build/Tone.min.js"></script>
+   
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PZ5TRZXG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+    <style>
+        /* Custom Styles and Global Resets */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFF5EE; /* cream-base */
+            overflow-x: hidden; /* Prevent horizontal scroll due to animations */
+        }
+
+        .hero-title {
+            font-family: 'Great Vibes', cursive;
+         }
+
+        /* --- Floating Hearts Animation --- */
+        .heart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .heart {
+            position: absolute;
+            color: #4169E1; /* royal-blue */
+            font-size: 2rem;
+            animation: float 10s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-300px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(-600px) scale(0.9); opacity: 0; }
+        }
+        /* End Floating Hearts */
+
+        /* --- Timeline Styling (Mobile first) --- */
+        .timeline-item {
+            position: relative;
+            padding-left: 1.5rem; /* Space for the line/dot */
+            margin-bottom: 3rem; /* Increased margin for better visual separation and connection */
+        }
+
+        /* Mobile Line (Each item has its own line segment on the left) */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0.5rem; /* Start line segment from the vertical center of the dot */
+            bottom: -0.5rem; /* Extend line into the margin below to meet the next dot cleanly */
+            width: 2px;
+            background-color: #191970; /* deep-sapphire for the line */
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.5rem; /* Center the dot's vertical position relative to the content block */
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            border-radius: 9999px; /* Circle */
+            background-color: #191970; /* deep-sapphire */
+            border: 3px solid #FFF5EE; /* cream-base border */
+            z-index: 20;
+            box-shadow: 0 0 10px rgba(25, 25, 112, 0.7); /* Subtle glow based on deep-sapphire */
+        }
+        
+        /* NEW: Single continuous spine for desktop view (hidden on mobile) */
+        .timeline-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #191970;
+            transform: translateX(-50%);
+        }
+        #img-1{
+            /* border: 2px solid blue; */
+            background-image: url('./Gemini_Generated_Image_9s3c5a9s3c5a9s3c.png');
+            background-size: cover;
+        }
+        #img-2{
+            /* border: 2px solid blue; */
+            background-image: url("./images/cover_images/falling-in-love.jpg");
+           background-size: cover;
+        }
+        #img-3{
+            /* border: 2px solid blue; */
+            background-image: url("./images/cover_images/my-happiness.jpg");
+           background-size: cover;
+        }
+        #img-4{
+            /* border: 2px solid blue; */
+            background-image: url("./images/cover_images/love-museum.jpg");
+           background-size: cover;
+        }
+        #img-5{
+            /* border: 2px solid blue; */
+            background-image: url("./images/cover_images/for-madam.jpg");
+           background-size: cover;
+        }
+        #img-6{
+            /* border: 2px solid blue; */
+            background-image: url("./images/cover_images/evar-woundered.jpg");
+           background-size: cover;
+        }
+
+        /* Desktop view: side-by-side layout for timeline */
+        @media (min-width: 768px) {
+            /* Disable the per-item mobile line on desktop now that we have the spine */
+            .timeline-item::before {
+                content: none;
+            }
+            
+            .timeline-item {
+                width: 50%;
+                padding-left: 0;
+                padding-right: 3rem;
+            }
+            .timeline-item:nth-child(odd) {
+                float: left;
+                clear: right;
+                text-align: right;
+                padding-right: 3rem;
+                padding-left: 0;
+            }
+            .timeline-item:nth-child(even) {
+                float: right;
+                clear: left;
+                padding-left: 3rem;
+                padding-right: 0;
+            }
+            
+            /* Center the dots on the spine for the two-column layout */
+            .timeline-dot {
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, -50%); /* Centered both horizontally and vertically */
+            }
+            
+            /* Ensure the dot styles are consistent */
+            .timeline-item:nth-child(odd) .timeline-dot,
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, -50%);
+            }
+
+            /* Arrow for better readability */
+            .timeline-content {
+                position: relative;
+            }
+            .timeline-item:nth-child(odd) .timeline-content::after {
+                content: '';
+                position: absolute;
+                top: 0.75rem;
+                right: -1.75rem;
+                border: 10px solid transparent;
+                border-left-color: #4169E1; /* royal-blue */
+            }
+            .timeline-item:nth-child(even) .timeline-content::after {
+                content: '';
+                position: absolute;
+                top: 0.75rem;
+                left: -1.75rem;
+                border: 10px solid transparent;
+                border-right-color: #4169E1; /* royal-blue */
+            }
+        }
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .effect:hover{
+            cursor: pointer;
+        }  
+
+    </style>
+    <script>
+        // Custom Tailwind Configuration for colors and animations
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'royal-blue': '#4169E1', /* Primary vibrant blue (replaces pink-love) */
+                        'pale-blue': '#E0F7FA', /* Very light blue (replaces lavender-dream) */
+                        'deep-sapphire': '#191970', /* Dark accent blue (replaces crimson-heart) */
+                        'cream-base': '#FFF5EE',
+                        'gold-accent': '#FFD700',
+                    },
+                    fontFamily: {
+                        script: ['"Great Vibes"', 'cursive'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                    },
+                    animation: {
+                        fadeInUp: 'fadeInUp 1s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-cream-base text-gray-800 antialiased">
+
+    <!-- Floating Hearts Container (CSS Animation) -->
+    <div class="heart-container opacity-0" id="heart-anim-container">
+        <!-- Hearts are added dynamically via JS for positioning variance -->
+    </div>
+
+    <!-- Music Player Button -->
+    <button id="music-toggle-btn" class="fixed top-4 right-4 z-50 p-3 rounded-full bg-royal-blue shadow-lg hover:bg-deep-sapphire transition-all duration-300 transform hover:scale-110">
+        <svg id="music-on-icon" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.12 2-2.5 2S4 20.105 4 19s1.12-2 2.5-2 2.5.895 2.5 2zM21 16c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 .895-2 2-2 2.5.895 2.5 2zM10 20l4-4"></path>
+        </svg>
+        <svg id="music-off-icon" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+        </svg>
+    </button>
+
+    <!-- 1. Hero Section -->
+    <section class="min-h-screen flex items-center justify-center text-center relative overflow-hidden bg-pale-blue p-6 shadow-2xl">
+        <div class="z-20 p-8 md:p-12 bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-royal-blue/50 opacity-0 animate-fadeInUp" style="animation-delay: 0.5s;">
+            <h1 class="hero-title text-7xl md:text-9xl text-deep-sapphire mb-4">
+                Heart Things <span class="text-royal-blue"></span>
+            </h1>
+            <p class="text-2xl md:text-4xl text-gray-700 font-script mt-6">
+                Happy   Birthday,  My  One  and  Only  Love!
+            </p> 
+            <p class="mt-4 text-lg md:text-xl text-gray-600">
+                This little corner of the internet is just for you.
+            </p>
+        </div>
+    </section>
+
+    <!-- 1. Countdown Timer Section -->
+    <section id="countdown" class="text-center py-12 bg-royal-blue/10 border-b border-royal-blue/30 opacity-0 animate-fadeInUp" style="animation-delay: 0.8s;">
+        <h2 class="text-3xl md:text-4xl font-script text-deep-sapphire mb-6">
+            The Clock is Ticking Until November 29th!
+        </h2>
+        <div id="timer" class="flex justify-center space-x-2 sm:space-x-4 md:space-x-8">
+            <!-- Timer units will be dynamically inserted here by JavaScript -->
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 py-16">
+
+        <!-- 2. About Her -->
+        <section id="about" class="mb-20 text-center opacity-0 animate-fadeInUp" style="animation-delay: 1s;">
+            <h2 class="text-5xl font-script text-royal-blue mb-8 border-b-2 border-royal-blue inline-block pb-2">All About Her</h2>
+            <div class="max-w-6xl mx-auto bg-white p-8 rounded-xl shadow-xl border border-pale-blue">
+                <p class="text-xl md:text-2xl leading-relaxed text-gray-700">
+                                            From the moment  I first saw you on 14-04-2017, something in me changed forever.
+                        I didn’t know your name, I didn’t know who you were. That moment—just seeing you board the bus—felt like my whole life suddenly found its purpose.
+
+                        From that day, you have lived in my heart without even knowing it.
+
+                        All these years, through every temple trip we took together, every small moment—my love for you only grew. I didn’t even realise how deep it had gone until the day I started missing you so much that it hurt.
+
+                        I searched for you for years. Just your name and your face… that was enough for me to keep looking. Finding you in Social Media after two whole years felt like destiny giving me one more chance.
+
+                        Even when you didn’t remember me in the beginning…
+                        Even when you asked us to stay “just friends”…a
+                        My heart never changed.
+
+                        Not once.
+                        Not even for a second.
+
+                        I know you may not feel the same.
+                        I know you said you regret not being able to return the love I give you.
+                        But please understand this — I never loved you because I wanted something back. I love you because you are you.
+
+                        Your smile, your existence…
+                        Every part of you is precious to me.
+
+                        You are the only girl I will and I have ever loved in my entire life.
+                        And even today, after all these years, after all the distance, after all the silence — my heart still beats the same way it did when I saw you for the very first time.
+
+                        This website… this project… every small thing I make…
+                        It’s all because you deserve something beautiful.
+
+                        You always have.
+                        You always will.             
+                </p>
+            </div>
+        </section>
+        <!-- 3. Gallery -->
+        <section id="gallery" class="mb-20 opacity-0 animate-fadeInUp" style="animation-delay: 1.5s;">
+            <h2 class="text-5xl font-script text-royal-blue text-center mb-12 border-b-2 border-royal-blue inline-block pb-2 mx-auto block">Your Visual Treasures</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Placeholder Images/Media -->
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 effect" id="img-1" onclick="pagerenderin()">
+                    <!-- <img src="./Gemini_Generated_Image_9s3c5a9s3c5a9s3c.png" alt="The first glance" class="w-full  object-cover transition duration-500 hover:opacity-80" > -->
+                     <p class="font-script text-royal-blue text-center p-9 text-3xl" >First glance</p>
+                </div>
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 effect " id="img-2" onclick="falling_in_love()">
+                    <!-- <img src="https://placehold.co/400x400/4169E1/E32636?text=Video+Clip" alt="A fun video clip" class="w-full h-full object-cover transition duration-500 hover:opacity-80"> -->
+                     <p class="font-script text-royal-blue text-center p-9 text-3xl" >Falling in love</p>
+                </div>
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 effect" id="img-3" onclick="my_happiness()">
+                    <!-- <img src="https://placehold.co/400x600/E0F7FA/191970?text=Photo+3" alt="A special trip" class="w-full h-full object-cover transition duration-500 hover:opacity-80"> -->
+                     <p class="font-script text-royal-blue text-center p-9 text-3xl" >Myyy happiness</p>
+                </div>
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 effect" id="img-4" onclick="love_museum()">
+                    <!-- <img src="https://placehold.co/600x400/E0F7FA/191970?text=Photo+2" alt="A happy memory" class="w-full h-full object-cover transition duration-500 hover:opacity-80"> -->
+                    <p class="font-script text-royal-blue text-center p-9 text-3xl" >Love_museume</p>
+                </div>
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 col-span-2 effect" id="img-5" onclick="foryou()">
+                    <!-- <img src="https://placehold.co/1200x500/4169E1/E32636?text=Our+Adventures+Together" alt="Long image of an adventure" class="w-full h-full object-cover transition duration-500 hover:opacity-80"> -->
+                     <p class="font-script text-royal-blue text-center p-9 text-3xl" >Madammm</p>
+                </div>
+                <div class="w-full h-40 md:h-64 rounded-xl overflow-hidden shadow-lg transform hover:scale-[1.02] transition duration-300 effect" id="img-6" onclick="What_you_mean()">
+                    <!-- <img src="https://placehold.co/400x600/4169E1/E32636?text=Photo+5" alt="Another sweet memory" class="w-full h-full object-cover transition duration-500 hover:opacity-80"> -->
+                    <p class="font-script text-royal-blue text-center p-9 text-3xl" >What you mean to me</p>
+                </div>
+               
+            </div>
+        </section>
+
+        <!-- 4. Letters/Notes -->
+        <section id="letters" class="mb-20 opacity-0 animate-fadeInUp" style="animation-delay: 2s;">
+            <h2 class="text-5xl font-script text-royal-blue text-center mb-12 border-b-2 border-royal-blue inline-block pb-2 mx-auto block">My Best wishes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-royal-blue/30 p-6 rounded-xl shadow-xl border border-white transform hover:rotate-1 transition duration-500">
+                    <p class="text-3xl font-script text-deep-sapphire mb-4"> My Dearest V</p>
+                    <p class="text-gray-800 italic">"From the moment I first saw you , my world has carried your smile, your voice, and your presence in its every corner. You’ve been shaping my life without even knowing it. So today, on your special day, I pray that every dream you hold finds its way to you gently… that life gives you more love, more peace, and more reasons to smile."</p>
+                    <p class="text-right text-sm mt-4 text-gray-700">- 14/04/2017</p>
+                </div>
+                <!-- Card 2 (Highlight) -->
+                <div class="bg-white p-6 rounded-xl shadow-2xl border-4 border-gold-accent transform hover:scale-[1.05] transition duration-500">
+                    <p class="text-3xl font-script text-deep-sapphire mb-4"> ~ Happy Birthday Miss</p>
+                    <p class="text-gray-800 italic font-bold">"On your birthday, I don’t want to wish you the usual things.
+                        I want to wish you a kind of happiness that stays with you quietly, like a soft light in your heart… the kind that never leaves you, even on the days when life feels heavy."</p>
+                    <p class="text-right text-sm mt-4 text-gray-700">- Today</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-royal-blue/30 p-6 rounded-xl shadow-xl border border-white transform hover:-rotate-1 transition duration-500">
+                    <p class="text-3xl font-script text-deep-sapphire mb-4">A Thought</p>
+                    <p class="text-gray-800 italic">"Happy Birthday, my girl.
+                            I don’t know what the future holds,
+                            but I know one thing with all my heart:
+                            my life will always carry your name in every heart beat inside me.
+                            you deserve nothing less.
+                            And I may not be the one beside you right now but,
+                            you’ll always be the one inside my heart.
+
+                            Happy Birthday, the girl I’ve loved since the very first glance.
+                            Always yours, quietly and endlessly.</p>
+                    <p class="text-right text-sm mt-4 text-gray-700">- 29/11/2025</p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 5. Memories Timeline -->
+        <section id="timeline" class="mb-20 opacity-0 animate-fadeInUp" style="animation-delay: 2.5s;">
+            <h2 class="text-5xl font-script text-royal-blue text-center mb-12 border-b-2 border-royal-blue inline-block pb-2 mx-auto block">My Love Journey</h2>
+
+            <!-- FIX: Added clearfix class to the container to prevent floated timeline items from causing overlap with the next section -->
+            <div class="relative max-w-4xl mx-auto py-4 clearfix">
+                <!-- NEW: Dedicated Spine for desktop view, visible only above 768px -->
+                <div class="timeline-spine hidden md:block"></div> 
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">April 14 2017</p>
+                        <p class="text-gray-800 mt-1">The First Look</p>
+                        <p class="text-sm text-gray-600 italic">"The moment my eyes met you... my life found its purpose. Everything began this day."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">August 08 2023</p>
+                        <p class="text-gray-800 mt-1">The Day I Found Your ID</p>
+                        <p class="text-sm text-gray-600 italic">"After years of searching only with your name and the memory of your smile… I finally found you.
+                                        My hands were shaking. It felt like destiny returning something I’d lost."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">August 12 2023</p>
+                        <p class="text-gray-800 mt-1">The Day I Confessed</p>
+                        <p class="text-sm text-gray-600 italic">"my heart finally said that day.
+                            Whether you accepted it or not, loving you was the most honest thing I’ve ever done."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">December 16 2023</p>
+                        <p class="text-gray-800 mt-1">After Years, Seeing You Again </p>
+                        <p class="text-sm text-gray-600 italic">"The day we saw each other after i confessed"</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-pale-blue/70 p-4 rounded-xl shadow-md border border-pale-blue">
+                        <p class="text-lg font-bold text-deep-sapphire">June 12 2024</p>
+                        <p class="text-gray-800 mt-1">The First Time You Talked to Me</p>
+                        <p class="text-sm text-gray-600 italic">"After all the struggles, after all the waiting… you finally spoke to me.
+                                    And when you said ‘let’s be friends’, it felt like sunlight after years of rain.
+                                    Friendship with you was a blessing I never expected to receive."</p>
+                    </div>
+                </div>
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-pale-blue/70 p-4 rounded-xl shadow-md border border-pale-blue">
+                        <p class="text-lg font-bold text-deep-sapphire">October 10 2024</p>
+                        <p class="text-gray-800 mt-1">The Days I Saw You Without You Knowing</p>
+                        <p class="text-sm text-gray-600 italic">"You walked past, unaware… but those few seconds were entire universes for me.
+                                Just seeing you, even from far, was enough to make my whole day glow."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-pale-blue/70 p-4 rounded-xl shadow-md border border-pale-blue">
+                        <p class="text-lg font-bold text-deep-sapphire">October 24 2024</p>
+                        <p class="text-gray-800 mt-1">The Days I Saw You Without You Knowing</p>
+                        <p class="text-sm text-gray-600 italic">"For a moment, life felt right again.
+                                        Just seeing you was enough to make my day."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-pale-blue/70 p-4 rounded-xl shadow-md border border-pale-blue">
+                        <p class="text-lg font-bold text-deep-sapphire">October 26 2024</p>
+                        <p class="text-gray-800 mt-1">The First Time Our Eyes Meet</p>
+                        <p class="text-sm text-gray-600 italic">"That road trip where we saw the mountains and the ocean in the same week. Unforgettable."</p>
+                    </div>
+                </div>
+                
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">November 05 2024</p>
+                        <p class="text-gray-800 mt-1">The First Time Our Eyes Meet</p>
+                        <p class="text-sm text-gray-600 italic">"The most honest and heartfelt words I've ever spoken. I meant every letter."</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-pale-blue/70 p-4 rounded-xl shadow-md border border-pale-blue">
+                        <p class="text-lg font-bold text-deep-sapphire">April 9 2025</p>
+                        <p class="text-gray-800 mt-1">The Most Beautiful Day</p>
+                        <p class="text-sm text-gray-600 italic">“Seeing you was the best gift my heart ever received.”
+                                        You in front of me  that Whole day…
+                                        I carried it inside me like a treasure."</p>
+                    </div>
+                </div>
+                 <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">October 31 2025</p>
+                        <p class="text-gray-800 mt-1">When You Said “You Deserve Better”</p>
+                        <p class="text-sm text-gray-600 italic">"You said I deserve better…
+                                                But better doesn’t exist for me.
+                                                It was you from the first time I saw you.
+                                                It will be you in every lifetime."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content bg-royal-blue/30 p-4 rounded-xl shadow-md border border-royal-blue/50">
+                        <p class="text-lg font-bold text-deep-sapphire">Today</p>
+                        <p class="text-gray-800 mt-1">Your Beautiful Birthday!</p>
+                        <p class="text-sm text-gray-600 italic">"A new chapter begins. I can't wait to see all the memories you’ll make next."</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. Final Message Section -->
+        <section id="message" class="text-center py-12 bg-deep-sapphire rounded-3xl shadow-2xl opacity-0 animate-fadeInUp" style="animation-delay: 3s;">
+            <p class="text-3xl md:text-5xl font-script text-white italic px-4">
+                “You'll always be my forver favorite 💖.”
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-gray-500 text-sm">
+        <p>Made with love <span class="text-royal-blue">💗</span> By A Devloper In Love</p>
+        <!-- Hardcoded the year to eliminate any dynamic scripting issues -->
+        <p class="mt-1">&copy; 2025 Heart Thing, just for you.</p>
+    </footer>
+
+    <script>
+        // Helper function to create the timer unit HTML structure
+        function createUnit(value, label) {
+            // Ensure value is a string and has at least two digits (e.g., 05)
+            const displayValue = value.toString().padStart(2, '0');
+            return `
+                <div class="p-3 md:p-5 bg-white rounded-xl shadow-lg border border-royal-blue/50 w-20 md:w-28 text-deep-sapphire">
+                    <p class="text-3xl md:text-5xl font-bold">${displayValue}</p>
+                    <p class="text-sm md:text-base mt-1 text-royal-blue uppercase">${label}</p>
+                </div>
+            `;
+        }
+
+        function startCountdown() {
+            // Target date: November 29th of the current year (2025)
+            // Note: The date is set for 11/29/2025 based on the current system date (Oct 28, 2025)
+            const targetDate = new Date("November 29, 2025 00:00:00").getTime();
+            const timerElement = document.getElementById("timer");
+
+            const updateTimer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result using the helper function
+                timerElement.innerHTML = `
+                    ${createUnit(days, 'Days')}
+                    ${createUnit(hours, 'Hours')}
+                    ${createUnit(minutes, 'Minutes')}
+                    ${createUnit(seconds, 'Seconds')}
+                `;
+
+                // If the countdown is finished, display a birthday message
+                if (distance < 0) {
+                    clearInterval(updateTimer);
+                    timerElement.innerHTML = "<span class='text-4xl md:text-6xl font-script text-royal-blue animate-pulse'>HAPPY BIRTHDAY, MY LOVE!</span>";
+                }
+            }, 1000);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start the countdown timer
+            startCountdown();
+
+            // 1. Gentle Fade-in Animation for main content (handled by Tailwind utility classes in HTML)
+            // The opacity:0 and animation-fadeInUp is already applied to sections.
+
+            // 2. Floating Heart Generation
+            const heartContainer = document.getElementById('heart-anim-container');
+            const numHearts = 15;
+            
+            // Show the container after a short delay
+            setTimeout(() => {
+                heartContainer.classList.remove('opacity-0');
+                heartContainer.style.transition = 'opacity 2s ease';
+            }, 1000);
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '&#10084;'; // Unicode heart symbol
+
+                // Randomize starting position
+                const startX = Math.random() * 100;
+                const startY = 100 + Math.random() * 50; // Start off-screen below
+                const size = 1.5 + Math.random() * 1.5; // Random size 1.5rem to 3.0rem
+                const duration = 8 + Math.random() * 6; // Random duration 8s to 14s
+
+                heart.style.left = `${startX}vw`;
+                heart.style.bottom = `-${startY}px`;
+                heart.style.fontSize = `${size}rem`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDelay = `-${Math.random() * duration}s`; // Stagger start times
+
+                heartContainer.appendChild(heart);
+            }
+
+            // 3. Music Player (Tone.js)
+            const btn = document.getElementById('music-toggle-btn');
+            const iconOn = document.getElementById('music-on-icon');
+            const iconOff = document.getElementById('music-off-icon');
+            let isPlaying = false;
+            let synth = null;
+
+            async function setupTone() {
+                // Check if Tone is already running (needed for mobile browsers)
+                if (Tone.context.state !== 'running') {
+                    await Tone.start();
+                }
+
+                if (!synth) {
+                    synth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "triangle" },
+                        envelope: {
+                            attack: 2,
+                            decay: 0.5,
+                            sustain: 0.8,
+                            release: 5,
+                        },
+                        volume: -15 // Keep it soft
+                    }).toDestination();
+                }
+
+                const loop = new Tone.Loop(time => {
+                    const notes = ["C4", "E4", "G4", "A4"]; // Simple, gentle chord progression
+                    const index = Math.floor(Math.random() * notes.length);
+                    synth.triggerAttackRelease(notes[index], "4n", time);
+                }, "2n").start(0); // Loop every 2 half notes
+
+                // Keep the loop reference on the button for cleanup
+                btn.loop = loop;
+            }
+
+            btn.addEventListener('click', async () => {
+                if (!synth) {
+                    // First interaction, set up the audio context and synth
+                    await setupTone();
+                }
+
+                if (isPlaying) {
+                    // Stop music
+                    btn.loop.stop();
+                    iconOn.classList.remove('hidden');
+                    iconOff.classList.add('hidden');
+                    isPlaying = false;
+                } else {
+                    // Start music
+                    btn.loop.start(Tone.now());
+                    iconOn.classList.add('hidden');
+                    iconOff.classList.remove('hidden');
+                    isPlaying = true;
+                }
+            });
+
+            // Prevent scroll on touch devices when clicking the button
+            btn.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
+        });
+
+        function pagerenderin(){
+            window.location.href='first-glance.html'
+        }
+        function love_museum(){
+            window.location.href='love-museum.html'
+        }
+        function falling_in_love(){
+            window.location.href='falling-in-love.html'
+        }
+        function my_happiness(){
+            window.location.href='myhappiness.html'
+        }
+        function foryou(){
+            window.location.href='for_you.html'
+        }
+        function last_yr_bdays(){
+            window.location.href='last_yr_bday.html'
+        }
+        function What_you_mean(){
+            window.location.href='What_you_mean.html'
+        }
+    </script>
+</body>
+</html>

@@ -9,8 +9,10 @@ import { api } from '../../lib/api';
 import { MemoryTimelineItem } from '../../types/api';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { Clock, CalendarDays, FolderUp } from 'lucide-react';
+import { Clock, CalendarDays, FolderUp, Camera, Heart, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { HER_GALLERY } from '../../lib/herData';
+import { LoveJourneyTimeline } from '../../components/timeline/LoveJourneyTimeline';
 
 export default function TimelinePage() {
   const { token } = useAuth();
@@ -86,22 +88,76 @@ export default function TimelinePage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Clock className="w-5 h-5 text-[#D96B43]" />
+              <span className="text-2xl">📸</span>
               <h1 className="font-serif text-2xl sm:text-3xl font-medium text-[#2C2623] dark:text-[#F7F3EE]">
-                Memory Timeline
+                Moments Scrapbook
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-[#7C6E64] dark:text-[#A89C94]">
-              Chronological journey of your life events, memories, and personal milestones.
+              A visual timeline of your brightest smiles, celebrations, and unforgettable memories.
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="text-xs px-3 py-1.5 rounded-xl bg-white dark:bg-[#201D1B] border border-[#E8DFD5] dark:border-[#38332E] font-medium text-[#6B5E57] dark:text-[#C4B7AE]">
-              {total} {total === 1 ? 'event recorded' : 'events recorded'}
+              {total} {total === 1 ? 'moment preserved' : 'moments preserved'} ✨
             </span>
           </div>
         </div>
+
+        {/* Visual Timeline Moments Reel */}
+        <div className="mb-6 p-4 rounded-3xl bg-white dark:bg-[#201D1B] border border-[#EAE2D8] dark:border-[#38332E] shadow-2xs">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <div className="flex items-center gap-2">
+              <Camera className="w-4 h-4 text-[#D96B43]" />
+              <h3 className="font-serif text-sm font-semibold text-[#2C2623] dark:text-[#F7F3EE]">
+                Snapshots Through Time ✨
+              </h3>
+            </div>
+            <Link
+              href="/profile"
+              className="text-xs text-[#D96B43] hover:underline font-medium flex items-center gap-1"
+            >
+              <span>View Full Album</span>
+              <span>&rarr;</span>
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+            {HER_GALLERY.map((moment) => (
+              <Link
+                key={moment.id}
+                href={`/?discuss=${encodeURIComponent(moment.title)}`}
+                className="group shrink-0 w-36 rounded-2xl overflow-hidden border border-[#E8DFD5] dark:border-[#38332E] bg-[#FAF7F2] dark:bg-[#1E1B19] p-1.5 transition-all hover:border-[#D96B43] hover:shadow-xs"
+                title={`Ask HER about "${moment.title}"`}
+              >
+                <div className="relative w-full h-24 rounded-xl overflow-hidden mb-1.5 bg-[#EFE7DC]">
+                  <img
+                    src={moment.src}
+                    alt={moment.title}
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <span className="absolute bottom-1 left-1.5 text-[9px] font-semibold text-white/90 drop-shadow-xs flex items-center gap-0.5">
+                    <Heart className="w-2.5 h-2.5 text-[#E07A5F] fill-[#E07A5F]" />
+                    <span>{moment.emotionVibe.split('&')[0].trim()}</span>
+                  </span>
+                </div>
+                <div className="px-0.5">
+                  <div className="text-[11px] font-medium text-[#2C2623] dark:text-[#F7F3EE] truncate group-hover:text-[#D96B43] transition-colors">
+                    {moment.title}
+                  </div>
+                  <div className="text-[9px] text-[#8C7E74] dark:text-[#A89C94] capitalize">
+                    {moment.category}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* The 2017 - Forever Journey Timeline */}
+        <LoveJourneyTimeline />
 
         {/* Filter Controls */}
         <TimelineFilters
@@ -129,12 +185,12 @@ export default function TimelinePage() {
           <div className="p-12 text-center rounded-3xl bg-white dark:bg-[#201D1B] border border-[#EAE2D8] dark:border-[#38332E] max-w-md mx-auto">
             <CalendarDays className="w-10 h-10 text-[#D96B43] mx-auto mb-3 opacity-60" />
             <h3 className="font-serif text-lg font-medium text-[#2C2623] dark:text-[#F7F3EE] mb-1">
-              No Timeline Memories Found
+              No Moments Added Yet
             </h3>
             <p className="text-xs text-[#7C6E64] dark:text-[#A89C94] leading-relaxed mb-5">
               {precision || startDate || endDate
                 ? 'No memories matched your current precision or date filter. Try clearing your filters.'
-                : 'Upload personal letters, notes, or talk with HER to begin weaving your life timeline.'}
+                : 'Start a conversation or leave a note in our Wish Capsule to begin adding memories to our story together 💖'}
             </p>
             <div className="flex items-center justify-center gap-3">
               <Link

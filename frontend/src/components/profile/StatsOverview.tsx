@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Brain, MessageSquare, Calendar, Shield } from 'lucide-react';
+import { Heart, Sparkles, Cake, Compass } from 'lucide-react';
 import { ProfileResponse } from '../../types/api';
-import { formatDate } from '../../lib/utils';
 
 interface StatsOverviewProps {
   profile: ProfileResponse;
@@ -12,36 +11,36 @@ interface StatsOverviewProps {
 export function StatsOverview({ profile }: StatsOverviewProps) {
   const stats = [
     {
-      title: 'Stored Memories',
-      value: profile.memory_count,
-      description: 'Facts, dates & life events',
-      icon: Brain,
+      title: 'Moments Preserved',
+      value: `${profile.memory_count > 0 ? profile.memory_count : 19}+`,
+      description: 'Photos, milestones & dates',
+      icon: Sparkles,
       color: 'text-[#D96B43]',
       bg: 'bg-[#FAF2EB] dark:bg-[#2C211A]',
     },
     {
-      title: 'Conversations',
-      value: profile.conversation_count,
-      description: 'Dialogue sessions with HER',
-      icon: MessageSquare,
+      title: 'Our Special Day',
+      value: 'Nov 29',
+      description: 'Her Birthday 🎂',
+      icon: Cake,
+      color: 'text-rose-500 dark:text-rose-400',
+      bg: 'bg-rose-50 dark:bg-rose-950/40',
+    },
+    {
+      title: 'Since First Glance',
+      value: '14-04-2017',
+      description: 'Bus stop in yellow dress ✨',
+      icon: Compass,
       color: 'text-amber-600 dark:text-amber-400',
       bg: 'bg-amber-50 dark:bg-amber-950/40',
     },
     {
-      title: 'Companion Since',
-      value: formatDate(profile.user.created_at),
-      description: 'Account activation date',
-      icon: Calendar,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    },
-    {
-      title: 'Privacy Scope',
-      value: 'Tenant Isolated',
-      description: 'Argon2id + Row-level security',
-      icon: Shield,
-      color: 'text-sky-600 dark:text-sky-400',
-      bg: 'bg-sky-50 dark:bg-sky-950/40',
+      title: 'Dedication',
+      value: 'Forever',
+      description: 'Made with love by Vivek',
+      icon: Heart,
+      color: 'text-pink-600 dark:text-pink-400',
+      bg: 'bg-pink-50 dark:bg-pink-950/40',
     },
   ];
 

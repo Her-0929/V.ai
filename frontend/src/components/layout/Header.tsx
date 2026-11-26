@@ -7,46 +7,36 @@ import {
   Menu,
   X,
   Heart,
-  MessageSquare,
-  Clock,
-  Compass,
-  UploadCloud,
-  User as UserIcon,
-  Activity,
+  MessageSquareHeart,
+  Mail,
+  Camera,
+  Feather,
+  Sparkles,
+  Music,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { HER_COMPANION, CUTE_COMPLIMENTS } from '../../lib/herData';
 
 const NAV_ITEMS = [
-  { name: 'Chat', href: '/', icon: MessageSquare },
-  { name: 'Timeline', href: '/timeline', icon: Clock },
-  { name: 'Explorer', href: '/memories', icon: Compass },
-  { name: 'Upload', href: '/ingest', icon: UploadCloud },
-  { name: 'Profile', href: '/profile', icon: UserIcon },
+  { name: 'Heart to Heart', href: '/', icon: MessageSquareHeart },
+  { name: 'Open When Letters', href: '/memories', icon: Mail },
+  { name: 'Moments Scrapbook', href: '/timeline', icon: Camera },
+  { name: 'Wish Capsule', href: '/ingest', icon: Feather },
+  { name: 'All About You', href: '/profile', icon: Sparkles },
 ];
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isBackendHealthy, setIsBackendHealthy] = useState<boolean | null>(null);
+  const [complimentIdx, setComplimentIdx] = useState(0);
   const pathname = usePathname();
   const { user } = useAuth();
 
+  // Cycle through sweet compliments in header
   useEffect(() => {
-    // Check backend health
-    const checkHealth = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/health');
-        if (res.ok) {
-          setIsBackendHealthy(true);
-        } else {
-          setIsBackendHealthy(false);
-        }
-      } catch {
-        setIsBackendHealthy(false);
-      }
-    };
-    checkHealth();
-    const interval = setInterval(checkHealth, 30000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => {
+      setComplimentIdx((prev) => (prev + 1) % CUTE_COMPLIMENTS.length);
+    }, 7000);
+    return () => clearInterval(timer);
   }, []);
 
   // Close mobile menu on route change
@@ -66,63 +56,63 @@ export function Header() {
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-[#E07A5F] flex items-center justify-center text-white">
-              <Heart className="w-3.5 h-3.5 fill-white/80" />
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden ring-2 ring-rose-400/50 bg-[#E07A5F] shadow-xs">
+              <img
+                src={HER_COMPANION.avatarSm}
+                alt="You"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
-            <span className="font-serif text-lg font-medium text-[#2C2623] dark:text-[#F7F3EE]">
-              HER AI
-            </span>
+            <div>
+              <span className="font-serif text-lg font-bold text-[#2C2623] dark:text-[#F7F3EE] block leading-tight">
+                For You 💖
+              </span>
+              <span className="text-[10px] text-rose-500 font-medium">Your private world</span>
+            </div>
           </Link>
         </div>
 
-        {/* Desktop title / location indicator */}
-        <div className="hidden md:flex items-center gap-2">
-          <span className="text-xs uppercase font-medium tracking-widest text-[#9C8E85]">
-            Companion Space
-          </span>
-          <span className="text-stone-300 dark:text-stone-700">/</span>
-          <span className="text-sm font-medium text-[#4A4039] dark:text-[#D1C6BD] capitalize">
-            {pathname === '/' ? 'Conversation' : pathname.replace('/', '')}
+        {/* Desktop Love Note / Floating Compliment */}
+        <div className="hidden md:flex items-center gap-2.5 max-w-md truncate">
+          <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping" />
+          <span className="text-xs font-serif italic text-[#7C6E64] dark:text-[#C4B7AE] truncate transition-all duration-500">
+            &ldquo;{CUTE_COMPLIMENTS[complimentIdx]}&rdquo;
           </span>
         </div>
 
-        {/* Right side controls */}
-        <div className="flex items-center gap-3">
-          {/* Backend Status indicator */}
-          <div
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border ${
-              isBackendHealthy === true
-                ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
-                : isBackendHealthy === false
-                ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
-                : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700'
-            }`}
-            title={
-              isBackendHealthy === true
-                ? 'Backend connected (http://localhost:8000)'
-                : 'Backend unreachable'
-            }
+        {/* Right side romantic pills */}
+        <div className="flex items-center gap-2.5">
+          {/* Letters shortcut pill */}
+          <Link
+            href="/memories"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-semibold hover:bg-rose-100 transition-all shadow-2xs group"
           >
-            <Activity className="w-3 h-3 animate-pulse" />
-            <span className="hidden sm:inline">
-              {isBackendHealthy === true ? 'Backend Connected' : 'Backend Offline'}
-            </span>
-            <span className="sm:hidden">
-              {isBackendHealthy === true ? 'Online' : 'Offline'}
-            </span>
-          </div>
+            <Mail className="w-3.5 h-3.5 text-rose-500 group-hover:scale-110 transition-transform" />
+            <span>Open Letters 💌</span>
+          </Link>
 
-          {/* User Profile Capsule */}
+          {/* Sweet Tribute Capsule */}
           <Link
             href="/profile"
-            className="flex items-center gap-2 p-1.5 pl-2.5 rounded-full bg-white dark:bg-[#272421] border border-[#E8DFD5] dark:border-[#38332E] hover:border-[#D96B43]/50 transition-colors shadow-2xs"
+            className="flex items-center gap-2 p-1 pl-1 pr-3 rounded-full bg-white dark:bg-[#201D1B] border border-[#E8DFD5] dark:border-[#38332E] hover:border-rose-300 transition-all shadow-2xs group"
+            title="A tribute made with love"
           >
-            <span className="text-xs font-medium text-[#4A4039] dark:text-[#EAE3DC] max-w-[100px] truncate">
-              {user?.username || 'Guest'}
-            </span>
-            <div className="w-6 h-6 rounded-full bg-[#EFE7DC] dark:bg-[#38332E] flex items-center justify-center text-[#D96B43] dark:text-[#EB8D74] text-xs font-semibold">
-              {(user?.username || 'V')[0].toUpperCase()}
+            <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-rose-300 dark:ring-rose-900 group-hover:scale-105 transition-transform bg-[#E07A5F]">
+              <img
+                src={HER_COMPANION.avatarSm}
+                alt="You"
+                className="w-full h-full object-cover object-top"
+              />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-rose-500 ring-1.5 ring-white dark:ring-[#201D1B]" />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-xs font-serif font-bold text-[#2C2623] dark:text-[#EAE3DC] leading-tight">
+                To You ✨
+              </span>
+              <span className="text-[9px] text-rose-500 dark:text-rose-400 font-medium leading-none">
+                Special & Loved
+              </span>
             </div>
           </Link>
         </div>
@@ -130,26 +120,35 @@ export function Header() {
 
       {/* Mobile drawer overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-xs flex">
-          <div className="w-64 bg-[#F7F2EC] dark:bg-[#1A1816] h-full p-5 flex flex-col shadow-2xl">
+        <div className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-xs flex">
+          <div className="w-72 bg-[#FAF7F2] dark:bg-[#1A1816] h-full p-5 flex flex-col shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-[#E8DFD5] dark:border-[#2C2926]">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-[#E07A5F] flex items-center justify-center text-white">
-                  <Heart className="w-4 h-4 fill-white/80" />
+              <div className="flex items-center gap-3">
+                <div className="relative w-11 h-11 rounded-2xl overflow-hidden ring-2 ring-rose-400/50 bg-[#E07A5F] shadow-sm">
+                  <img
+                    src={HER_COMPANION.avatarSm}
+                    alt="You"
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
-                <span className="font-serif text-lg font-medium text-[#2C2623] dark:text-[#F7F3EE]">
-                  HER AI
-                </span>
+                <div>
+                  <span className="font-serif text-xl font-bold text-[#2C2623] dark:text-[#F7F3EE] block leading-tight">
+                    For You 💖
+                  </span>
+                  <span className="text-[11px] text-rose-500 font-medium">
+                    A world made just for you
+                  </span>
+                </div>
               </div>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-1 rounded-lg text-[#61554D] hover:bg-[#EFE7DC]"
+                className="p-1.5 rounded-xl text-[#61554D] hover:bg-[#EFE7DC]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <nav className="flex-1 py-4 space-y-1">
+            <nav className="flex-1 py-4 space-y-2">
               {NAV_ITEMS.map((item) => {
                 const isActive =
                   pathname === item.href ||
@@ -159,21 +158,21 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${
+                    className={`flex items-center gap-3 px-3.5 py-3 rounded-2xl text-sm font-medium ${
                       isActive
-                        ? 'bg-white dark:bg-[#272421] text-[#D96B43] shadow-xs'
+                        ? 'bg-white dark:bg-[#272421] text-[#D96B43] shadow-xs border border-[#E8DFD5]'
                         : 'text-[#61554D] dark:text-[#B3A69C]'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4 text-rose-500" />
                     <span>{item.name}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="pt-4 border-t border-[#E8DFD5] dark:border-[#2C2926] text-xs text-[#85776E]">
-              Logged in as: <strong className="text-[#2C2623] dark:text-white">{user?.username}</strong>
+            <div className="p-4 rounded-2xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 text-center text-xs text-rose-800 dark:text-rose-300 font-serif italic">
+              &ldquo;Made with love for the one with the brightest smile.&rdquo;
             </div>
           </div>
           <div className="flex-1" onClick={() => setMobileMenuOpen(false)} />
