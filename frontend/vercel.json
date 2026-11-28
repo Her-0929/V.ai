@@ -3,6 +3,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://her-ai-backend.onrender.com"
+    "NEXT_PUBLIC_API_URL": "https://v-ai-8qzk.onrender.com"
   }
 }

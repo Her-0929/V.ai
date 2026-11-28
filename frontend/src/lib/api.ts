@@ -23,7 +23,8 @@ import {
   UserResponse,
 } from '../types/api';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'https://v-ai-8qzk.onrender.com';
 
 class ApiClient {
   private client: AxiosInstance;

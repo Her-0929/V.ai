@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_DEFAULT: str = "120/minute"
 
     # Environment-specific CORS restrictions (comma-separated origins)
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173"
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173,https://v-ai-nine.vercel.app"
 
     # Artifact Storage & Upload Limits (Milestone 12)
     ARTIFACT_STORAGE_DIR: str = "storage/artifacts"
