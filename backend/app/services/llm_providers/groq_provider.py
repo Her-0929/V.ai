@@ -23,11 +23,14 @@ class GroqProvider(BaseLLMProvider):
         if not self._api_key:
             raise RuntimeError("GROQ_API_KEY is not configured.")
 
-        # Candidate models to try in case the configured one is decommissioned or typoed
-        candidate_models = [self._model]
-        for fallback in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama3-8b-8192"]:
-            if fallback not in candidate_models:
-                candidate_models.append(fallback)
+        # Active, verified models on Groq in priority order (llama3-8b-8192 is decommissioned)
+        verified_models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]
+        candidate_models = []
+        if self._model and self._model not in ["llama3-8b-8192", "llama3-70b-8192"]:
+            candidate_models.append(self._model)
+        for m in verified_models:
+            if m not in candidate_models:
+                candidate_models.append(m)
 
         last_error = None
         for model in candidate_models:
@@ -50,11 +53,16 @@ class GroqProvider(BaseLLMProvider):
                         self._model = model  # cache working model
                         return content.strip()
                 
-                # If error, record and try next model if 404 (model not found)
+                # If error, record and try next model if decommissioned or not found
                 error_body = response.text
                 last_error = f"Groq error ({response.status_code}): {error_body}"
-                if response.status_code != 404:
-                    # Non-404 error (e.g. 401 auth failure or 429 rate limit) — don't try other models
+                is_model_issue = (
+                    response.status_code in (400, 404)
+                    or "decommissioned" in error_body
+                    or "model_not_found" in error_body
+                )
+                if not is_model_issue:
+                    # Non-model error (e.g. 401 invalid API key) — don't retry other models
                     raise RuntimeError(last_error)
 
         raise RuntimeError(last_error or "Groq failed to generate response with candidate models.")
