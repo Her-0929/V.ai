@@ -14,10 +14,10 @@ httpx
 # Vector search
 pgvector
 
-# Embeddings
+# Embeddings (CPU-only torch — keeps build lean on Render/cloud)
 sentence-transformers
 numpy
-torch
+torch --index-url https://download.pytorch.org/whl/cpu
 
 # Security & Auth
 argon2-cffi

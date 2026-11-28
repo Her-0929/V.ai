@@ -1,11 +1,10 @@
 
 import os
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+os.environ.setdefault("HF_HUB_OFFLINE", "0")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "0")
 
 import torch
 from sentence_transformers import SentenceTransformer
-
 
 
 class EmbeddingService:
@@ -13,22 +12,21 @@ class EmbeddingService:
     DIMENSIONS = 384
 
     def __init__(self):
-        if not torch.cuda.is_available():
-            raise RuntimeError(
-                "HER requires an NVIDIA CUDA GPU."
-            )
-
-        self.device = "cuda"
+        # Use GPU if available, fall back to CPU for cloud/CPU-only deployments
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.model = SentenceTransformer(
             self.MODEL_NAME,
             device=self.device
         )
 
-        print(
-            f"HER Embedding Service initialized on "
-            f"{torch.cuda.get_device_name(0)}"
-        )
+        if self.device == "cuda":
+            print(
+                f"HER Embedding Service initialized on GPU: "
+                f"{torch.cuda.get_device_name(0)}"
+            )
+        else:
+            print("HER Embedding Service initialized on CPU (cloud/no-GPU mode).")
 
     def generate_embedding(self, text: str) -> list[float]:
         if not text or not text.strip():
@@ -41,10 +39,8 @@ class EmbeddingService:
             device=self.device
         )
 
-        torch.cuda.synchronize()
-
-        if embedding.device.type != "cuda":
-            raise RuntimeError("Embedding was not generated on GPU.")
+        if self.device == "cuda":
+            torch.cuda.synchronize()
 
         if embedding.shape[0] != self.DIMENSIONS:
             raise ValueError("Unexpected embedding dimensions.")
