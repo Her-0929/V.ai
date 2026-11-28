@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: her-ai-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        sync: false          # Set manually in Render dashboard (Supabase URL)
+      - key: LLM_PROVIDER
+        value: groq
+      - key: LLM_ENABLE_FALLBACK
+        value: "true"
+      - key: GROQ_API_KEY
+        sync: false          # Set manually in Render dashboard
+      - key: GROQ_MODEL
+        value: llama-3.1-8b-instant
+      - key: GEMINI_API_KEY
+        sync: false          # Optional fallback
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: JWT_SECRET_KEY
+        sync: false          # Set manually — generate with: openssl rand -hex 32
+      - key: CORS_ORIGINS
+        sync: false          # Set to your Vercel frontend URL after deploying
+      - key: RAG_TOP_K
+        value: "5"
+      - key: ARTIFACT_STORAGE_DIR
+        value: /tmp/artifacts
