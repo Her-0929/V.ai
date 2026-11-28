@@ -51,9 +51,13 @@ class Settings(BaseSettings):
 
     @property
     def allowed_cors_origins(self) -> list[str]:
-        if self.APP_ENV == "development" and self.CORS_ORIGINS == "*":
-            return ["*"]
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        # Always guarantee deployed Vercel frontend domains are permitted
+        guaranteed = ["https://v-ai-nine.vercel.app"]
+        for g in guaranteed:
+            if g not in origins:
+                origins.append(g)
+        return origins
 
 
     model_config = SettingsConfigDict(

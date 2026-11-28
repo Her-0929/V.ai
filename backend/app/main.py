@@ -50,10 +50,11 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS — Environment-specific allowed origins
+# CORS — Environment-specific allowed origins + any vercel preview
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_cors_origins,
+    allow_origin_regex=r"^https://.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
