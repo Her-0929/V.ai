@@ -12,9 +12,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Pre-download the fastembed ONNX model at build time (~80 MB)
-# so it's cached in the image and no internet is needed at runtime
-RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('BAAI/bge-small-en-v1.5').embed(['warmup']))"
+ENV FASTEMBED_CACHE_PATH=/app/model_cache
+RUN mkdir -p /app/model_cache && chmod -R 777 /app/model_cache
+
+# Pre-download the fastembed ONNX model at build time into /app/model_cache
+RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('BAAI/bge-small-en-v1.5', cache_dir='/app/model_cache').embed(['warmup']))" && chmod -R 777 /app/model_cache
 
 COPY . .
 

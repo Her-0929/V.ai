@@ -73,12 +73,16 @@ class RAGService:
         # 1. RETRIEVE RELEVANT MEMORIES
         # ======================================
 
-        raw_memories = memory_retrieval_service.search_similar_memories(
-            db=db,
-            user_id=user_id,
-            query=user_message,
-            limit=settings.RAG_TOP_K,
-        )
+        try:
+            raw_memories = memory_retrieval_service.search_similar_memories(
+                db=db,
+                user_id=user_id,
+                query=user_message,
+                limit=settings.RAG_TOP_K,
+            )
+        except Exception as exc:
+            logger.warning("Memory retrieval skipped due to exception: %s", exc)
+            raw_memories = []
 
         logger.debug(
             "Memory retrieval: user=%s query=%r raw=%d",
