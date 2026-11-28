@@ -17,6 +17,7 @@ export function BentoChatModal() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [convId, setConvId] = useState<string | null>(null);
 
   const sendMessage = async (userText?: string) => {
     const textToSend = userText || input;
@@ -33,11 +34,29 @@ export function BentoChatModal() {
     setIsTyping(true);
 
     try {
-      const res = await api.createConversation('Heart to Heart with V');
-      const convId = res.id;
+      // Ensure we are authenticated (auto-login/register if token is not yet in localStorage)
+      let token = typeof window !== 'undefined' ? localStorage.getItem('her_ai_token') : null;
+      if (!token) {
+        try {
+          const authRes = await api.login('vivek', 'HerAiVivekSecure2026!');
+          token = authRes.access_token;
+        } catch {
+          const regRes = await api.register('vivek', 'vivek@her-ai.internal', 'HerAiVivekSecure2026!');
+          token = regRes.access_token;
+        }
+      }
+
+      // Reuse active conversation or create one
+      let currentConvId = convId;
+      if (!currentConvId) {
+        const res = await api.createConversation('Heart to Heart with V');
+        currentConvId = res.id;
+        setConvId(currentConvId);
+      }
+
       const reply = await api.sendMessage({
         message: textToSend,
-        conversation_id: convId,
+        conversation_id: currentConvId,
       });
 
       setMessages((prev) => [
@@ -48,7 +67,8 @@ export function BentoChatModal() {
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
-    } catch {
+    } catch (err) {
+      console.error('Chat API error:', err);
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,

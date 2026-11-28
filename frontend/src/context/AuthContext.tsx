@@ -33,14 +33,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const me = await api.getMe();
         setUser(me);
       } else {
-        // Auto-login with default dev tenant 'vivek' for seamless out-of-the-box experience
+        // Auto-login with default companion user 'vivek' for seamless out-of-the-box experience
         try {
           const authRes = await api.login('vivek', 'HerAiVivekSecure2026!');
           setToken(authRes.access_token);
           setUser(authRes.user);
         } catch {
-          // If default user doesn't exist yet, user will be prompted to login/register
-          console.info('Dev auto-login skipped. User may register or login.');
+          // If user doesn't exist yet in the database, automatically register them!
+          try {
+            const regRes = await api.register('vivek', 'vivek@her-ai.internal', 'HerAiVivekSecure2026!');
+            setToken(regRes.access_token);
+            setUser(regRes.user);
+            console.info('Created and authenticated default companion user.');
+          } catch (regErr) {
+            console.warn('Auto-register failed:', regErr);
+          }
         }
       }
     } catch (err: unknown) {
