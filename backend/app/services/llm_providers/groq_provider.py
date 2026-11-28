@@ -11,8 +11,8 @@ class GroqProvider(BaseLLMProvider):
     provider_name: str = "groq"
 
     def __init__(self) -> None:
-        self._api_key = settings.GROQ_API_KEY
-        self._model = settings.GROQ_MODEL
+        self._api_key = (settings.GROQ_API_KEY or "").strip()
+        self._model = (settings.GROQ_MODEL or "llama-3.1-8b-instant").strip()
         self._base_url = "https://api.groq.com/openai/v1/chat/completions"
 
     @property
@@ -23,24 +23,41 @@ class GroqProvider(BaseLLMProvider):
         if not self._api_key:
             raise RuntimeError("GROQ_API_KEY is not configured.")
 
-        headers = {
-            "Authorization": f"Bearer {self._api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
-            "model": self._model,
-            "messages": messages,
-            "temperature": 0.7,
-        }
+        # Candidate models to try in case the configured one is decommissioned or typoed
+        candidate_models = [self._model]
+        for fallback in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "llama3-8b-8192"]:
+            if fallback not in candidate_models:
+                candidate_models.append(fallback)
 
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(self._base_url, headers=headers, json=payload)
-            response.raise_for_status()
-            result = response.json()
-            content = result.get("choices", [{}])[0].get("message", {}).get("content")
-            if not content:
-                raise RuntimeError("Groq returned an empty response.")
-            return content.strip()
+        last_error = None
+        for model in candidate_models:
+            headers = {
+                "Authorization": f"Bearer {self._api_key}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": model,
+                "messages": messages,
+                "temperature": 0.7,
+            }
+
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                response = await client.post(self._base_url, headers=headers, json=payload)
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result.get("choices", [{}])[0].get("message", {}).get("content")
+                    if content:
+                        self._model = model  # cache working model
+                        return content.strip()
+                
+                # If error, record and try next model if 404 (model not found)
+                error_body = response.text
+                last_error = f"Groq error ({response.status_code}): {error_body}"
+                if response.status_code != 404:
+                    # Non-404 error (e.g. 401 auth failure or 429 rate limit) — don't try other models
+                    raise RuntimeError(last_error)
+
+        raise RuntimeError(last_error or "Groq failed to generate response with candidate models.")
 
     async def health_check(self) -> ProviderHealth:
         if not self._api_key:
