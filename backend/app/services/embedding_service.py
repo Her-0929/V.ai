@@ -12,27 +12,27 @@ class EmbeddingService:
     DIMENSIONS = 384
 
     def __init__(self):
-        # Use GPU if available, fall back to CPU for cloud/CPU-only deployments
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self._model: SentenceTransformer | None = None
 
-        self.model = SentenceTransformer(
-            self.MODEL_NAME,
-            device=self.device
-        )
-
-        if self.device == "cuda":
-            print(
-                f"HER Embedding Service initialized on GPU: "
-                f"{torch.cuda.get_device_name(0)}"
+    def _load_model(self) -> SentenceTransformer:
+        """Lazy-load the model on first use so startup is fast."""
+        if self._model is None:
+            print(f"HER Embedding Service: loading model on {self.device}...")
+            self._model = SentenceTransformer(
+                self.MODEL_NAME,
+                device=self.device
             )
-        else:
-            print("HER Embedding Service initialized on CPU (cloud/no-GPU mode).")
+            print(f"HER Embedding Service: ready on {self.device}.")
+        return self._model
 
     def generate_embedding(self, text: str) -> list[float]:
         if not text or not text.strip():
             raise ValueError("Text cannot be empty.")
 
-        embedding = self.model.encode(
+        model = self._load_model()
+
+        embedding = model.encode(
             text,
             convert_to_tensor=True,
             normalize_embeddings=True,
@@ -48,4 +48,5 @@ class EmbeddingService:
         return embedding.cpu().tolist()
 
 
+# Lightweight singleton — model loads on first generate_embedding() call
 embedding_service = EmbeddingService()
