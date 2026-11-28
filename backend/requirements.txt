@@ -14,10 +14,8 @@ httpx
 # Vector search
 pgvector
 
-# Embeddings (CPU-only torch — keeps build lean on Render/cloud)
-sentence-transformers
-numpy
-torch --index-url https://download.pytorch.org/whl/cpu
+# Embeddings (ONNX-based, no PyTorch — fits in 512MB free tier)
+fastembed
 
 # Security & Auth
 argon2-cffi

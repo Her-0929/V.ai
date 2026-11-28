@@ -1,29 +1,24 @@
-
-import os
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
-
-import torch
-from sentence_transformers import SentenceTransformer
+"""
+Embedding service using fastembed (ONNX runtime).
+Memory footprint: ~80 MB — compatible with Render free tier (512 MB limit).
+Model: BAAI/bge-small-en-v1.5 — 384 dimensions, same as all-MiniLM-L6-v2.
+"""
+from fastembed import TextEmbedding
 
 
 class EmbeddingService:
-    MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+    MODEL_NAME = "BAAI/bge-small-en-v1.5"
     DIMENSIONS = 384
 
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self._model: SentenceTransformer | None = None
+        # Lazy — model loads on first generate_embedding() call
+        self._model: TextEmbedding | None = None
 
-    def _load_model(self) -> SentenceTransformer:
-        """Lazy-load the model on first use so startup is fast."""
+    def _load_model(self) -> TextEmbedding:
         if self._model is None:
-            print(f"HER Embedding Service: loading model on {self.device}...")
-            self._model = SentenceTransformer(
-                self.MODEL_NAME,
-                device=self.device
-            )
-            print(f"HER Embedding Service: ready on {self.device}.")
+            print("HER Embedding Service: loading ONNX model (fastembed)...")
+            self._model = TextEmbedding(model_name=self.MODEL_NAME)
+            print("HER Embedding Service: ready.")
         return self._model
 
     def generate_embedding(self, text: str) -> list[float]:
@@ -31,21 +26,14 @@ class EmbeddingService:
             raise ValueError("Text cannot be empty.")
 
         model = self._load_model()
+        # fastembed returns a generator of numpy arrays
+        embeddings = list(model.embed([text]))
+        embedding = embeddings[0].tolist()
 
-        embedding = model.encode(
-            text,
-            convert_to_tensor=True,
-            normalize_embeddings=True,
-            device=self.device
-        )
+        if len(embedding) != self.DIMENSIONS:
+            raise ValueError(f"Unexpected embedding dimensions: {len(embedding)}")
 
-        if self.device == "cuda":
-            torch.cuda.synchronize()
-
-        if embedding.shape[0] != self.DIMENSIONS:
-            raise ValueError("Unexpected embedding dimensions.")
-
-        return embedding.cpu().tolist()
+        return embedding
 
 
 # Lightweight singleton — model loads on first generate_embedding() call
