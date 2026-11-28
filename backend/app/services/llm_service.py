@@ -1,52 +1,14 @@
-
-import httpx
-
-from app.core.config import settings
+"""Unified LLM Service wrapper delegating to llm_provider_service."""
+from app.services.llm_provider_service import llm_provider_service
 
 
 class LLMService:
+    @property
+    def model(self) -> str:
+        return getattr(llm_provider_service.active_provider, "model", "default")
 
-    def __init__(self):
-        self.base_url = settings.OLLAMA_BASE_URL.rstrip("/")
-        self.model = settings.OLLAMA_MODEL
-
-    async def generate_response(
-        self,
-        messages: list[dict],
-    ) -> str:
-
-        url = f"{self.base_url}/api/chat"
-
-        payload = {
-            "model": self.model,
-            "messages": messages,
-            "stream": False,
-            "options": {
-                "temperature": 0.7
-            }
-        }
-
-        async with httpx.AsyncClient(
-            timeout=settings.OLLAMA_TIMEOUT_SECONDS
-        ) as client:
-
-            response = await client.post(
-                url,
-                json=payload
-            )
-
-            response.raise_for_status()
-
-            result = response.json()
-
-            content = result.get("message", {}).get("content")
-
-            if not content:
-                raise RuntimeError(
-                    "Ollama returned an empty response."
-                )
-
-            return content.strip()
+    async def generate_response(self, messages: list[dict]) -> str:
+        return await llm_provider_service.generate_response(messages)
 
 
 llm_service = LLMService()

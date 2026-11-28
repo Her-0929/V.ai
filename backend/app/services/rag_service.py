@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.personality import build_system_prompt
-from app.services.llm_service import llm_service
+from app.services.llm_provider_service import llm_provider_service
 from app.services.memory_retrieval_service import memory_retrieval_service
 from app.services.emotional_intelligence_service import (
     emotional_intelligence_service,
@@ -172,7 +172,7 @@ class RAGService:
         # 8. GENERATE RESPONSE VIA LLM
         # ======================================
 
-        response = await llm_service.generate_response(messages)
+        response = await llm_provider_service.generate_response(messages)
 
         logger.debug("LLM response length: %d chars", len(response))
 
@@ -180,11 +180,13 @@ class RAGService:
         # 9. RETURN STRUCTURED RESULT
         # ======================================
 
+        active_model = getattr(llm_provider_service.active_provider, "model", "cloud-llm")
+
         return {
             "response": response,
             "retrieved_memories": memories,
             "memory_count": len(memories),
-            "model": llm_service.model,
+            "model": active_model,
             "emotional_context": {
                 "emotion": emotional_ctx.primary_emotion.value,
                 "intensity": emotional_ctx.intensity.value,
